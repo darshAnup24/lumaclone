@@ -27,3 +27,9 @@ Result: PASS (attempt 1)
 - Production runtime smoke: `/` and `/signin` return 200; `/home`, `/discover`, `/calendars`, and `/admin/review` redirect signed-out users safely to sign-in.
 
 Current Vercel documentation confirms Next.js 13.5+ supports route-level `maxDuration`; Vercel environment changes apply only to subsequent deployments. The README reflects both points.
+
+## Post-deployment security repair
+
+- Vercel built Next.js 15.1.7 but blocked the output as a vulnerable framework version.
+- Pinned `next` and `eslint-config-next` to the latest published Next 15 maintenance version, `15.5.23`; no dangerous bypass was added.
+- Revalidation: 145 tests PASS, typecheck PASS, lint PASS with the same seven baseline warnings, production build PASS on Next.js 15.5.23, and `git diff --check` PASS.

@@ -4,7 +4,7 @@
   "current_phase": 16,
   "current_phase_name": "Vercel Deployment Readiness",
   "started_at": "2026-08-09T10:53:00+05:30",
-  "updated_at": "2026-08-09T16:10:00+05:30",
+  "updated_at": "2026-08-09T16:26:00+05:30",
   "phases": [
     {
       "id": 0,
@@ -583,13 +583,14 @@
       "id": 16,
       "name": "Vercel Deployment Readiness",
       "status": "passed",
-      "attempts": 1,
+      "attempts": 2,
       "started_at": "2026-08-09T16:08:00+05:30",
-      "completed_at": "2026-08-09T16:10:00+05:30",
+      "completed_at": "2026-08-09T16:26:00+05:30",
       "implementation_evidence": [
         "Replaced the placeholder README with exact architecture, student flow, setup, cloud Supabase, Resend, Groq, admin, security, live-validation, and manual Vercel deployment guidance.",
         "Completed the names-only environment template for required campus services and optional existing cloud image integrations; added a Vercel-compatible 60-second inbound route duration.",
-        "Preserved the no-Docker, no-CI/CD, no-local-image constraint and did not perform an external Vercel deployment."
+        "Preserved the no-Docker, no-CI/CD, no-local-image constraint and did not perform an external Vercel deployment.",
+        "Repaired Vercel's vulnerable-framework block by pinning Next.js and its ESLint config from 15.1.7 to the latest Next 15 maintenance release, 15.5.23."
       ],
       "validation_evidence": [
         "Deployment readiness tests: PASS; 14 tests covering environment documentation, names-only template, required README sections, Vercel duration, and client secret boundaries.",
@@ -597,13 +598,16 @@
         "npm run lint, npm run typecheck, npm run build, git diff --check, tracked-env boundary, secret scan, and five-migration cloud parity: PASS.",
         "Final sequential live Groq, cloud RLS abuse, and inbound-to-calendar tests: PASS; synthetic cleanup audit returned all zero counts.",
         "Production runtime smoke: public pages 200 and protected event/admin pages 307 safely to sign-in.",
-        "Detailed evidence is recorded in .codex/campus-deployment/validation.md."
+        "Detailed evidence is recorded in .codex/campus-deployment/validation.md.",
+        "Post-deployment repair validation on Next.js 15.5.23: 145 tests, typecheck, lint, production build, and diff integrity PASS."
       ],
       "failures": [],
       "files_changed": [
         "README.md",
         ".env.example",
         "src/app/api/webhooks/resend/route.ts",
+        "package.json",
+        "package-lock.json",
         "tests/deployment/readiness.test.ts",
         ".codex/campus-deployment/validation.md"
       ]
@@ -624,7 +628,8 @@
     ,
     "Use the Supabase cloud free tier only: do not start local Docker services or add CI; validate migrations non-destructively until the intended cloud project is explicitly linked."
     ,
-    "User override for AI publication: relevant verified-sender items may auto-publish when confidence is missing or meets threshold; unsupported categories normalize to other. Ambiguous dates, low present confidence, unverified senders, and irrelevant content remain review/rejected safeguards."
+    "User override for AI publication: relevant verified-sender items may auto-publish when confidence is missing or meets threshold; unsupported categories normalize to other. Ambiguous dates, low present confidence, unverified senders, and irrelevant content remain review/rejected safeguards.",
+    "Pin Next.js and eslint-config-next to 15.5.23 after Vercel blocked the vulnerable 15.1.7 deployment; do not use the dangerous vulnerable-deployment bypass."
   ],
   "validation_history": [
     {
@@ -864,7 +869,14 @@
       "timestamp": "2026-08-09T16:10:00+05:30",
       "result": "PASS",
       "evidence": "README/environment/Vercel readiness, 145 tests, lint, typecheck, production build, migration parity, secret boundaries, runtime smoke, all final live tests, and zero synthetic cleanup passed."
+    },
+    {
+      "phase": 16,
+      "attempt": 2,
+      "timestamp": "2026-08-09T16:26:00+05:30",
+      "result": "PASS",
+      "evidence": "Vercel's vulnerable Next.js 15.1.7 block was repaired by pinning latest Next 15 maintenance release 15.5.23 with matching ESLint config; 145 tests, typecheck, lint, production build, and diff integrity passed."
     }
   ],
-  "last_summary": "All required phases 0-16 passed. Campus Luma preserves the existing UI and now includes cloud Supabase auth/data/RLS, unified official/student events, join approvals, notifications, Resend inbound/outbound, Groq extraction with the user's auto-publish policy, admin review, duplicate/update resolution, live security/E2E validation, and documented Vercel readiness. Final gates: 145 ordinary tests passed, three live suites passed explicitly, production build passed, five cloud migrations match, secret checks passed, and synthetic cleanup is zero."
+  "last_summary": "All required phases 0-16 passed. Vercel's vulnerable Next.js 15.1.7 block was repaired by pinning Next.js and eslint-config-next 15.5.23. Campus Luma preserves the existing UI and includes cloud Supabase auth/data/RLS, unified official/student events, join approvals, notifications, Resend inbound/outbound, Groq extraction with the user's auto-publish policy, admin review, duplicate/update resolution, live security/E2E validation, and documented Vercel readiness. Final repair gates: 145 tests, typecheck, lint, production build, and diff integrity passed."
 }
