@@ -3,6 +3,7 @@ import { CalendarDays, ExternalLink, MapPin, Users } from "lucide-react";
 import { notFound } from "next/navigation";
 import { EventShell } from "@/components/Events/EventShell";
 import { JoinRequestPanel } from "@/components/Events/JoinRequestPanel";
+import { eventCoverUrl } from "@/lib/events/cover";
 import { loadPublishedEvent } from "@/lib/events/load";
 import {
   categoryLabel,
@@ -25,16 +26,14 @@ export default async function EventPage({ params }: EventPageProps) {
   return (
     <EventShell>
       <article className="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-zinc-200/80 bg-white/70 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/70">
-        {event.cover_image_url ? (
-          <div
-            aria-label={`${event.title} cover`}
-            className="aspect-[2/1] w-full bg-zinc-200 bg-cover bg-center dark:bg-zinc-800"
-            role="img"
-            style={{ backgroundImage: `url(${JSON.stringify(event.cover_image_url)})` }}
-          />
-        ) : (
-          <div className="aspect-[3/1] bg-gradient-to-br from-zinc-100 via-purple-100 to-orange-100 dark:from-zinc-800 dark:via-purple-950 dark:to-zinc-900" />
-        )}
+        <div
+          aria-label={`${event.title} cover`}
+          className="aspect-[2/1] w-full bg-zinc-200 bg-cover bg-center dark:bg-zinc-800"
+          role="img"
+          style={{
+            backgroundImage: `url(${JSON.stringify(eventCoverUrl(event))})`,
+          }}
+        />
 
         <div className="grid gap-8 p-6 sm:p-8 md:grid-cols-[1fr_17rem]">
           <div>

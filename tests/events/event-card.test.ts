@@ -2,6 +2,7 @@ import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { EventCard } from "@/components/Events/EventCard";
+import { categoryCoverImages } from "@/lib/events/cover";
 import type { EventRecord } from "@/lib/events/schema";
 
 const event: EventRecord = {
@@ -61,5 +62,10 @@ describe("existing Luma event card integration", () => {
     );
     expect(html).toContain("Student activity");
     expect(html).toContain("Study");
+  });
+
+  it("shows the category cover when the event has no image", () => {
+    const html = renderToStaticMarkup(React.createElement(EventCard, { event }));
+    expect(html).toContain(categoryCoverImages.hackathon);
   });
 });

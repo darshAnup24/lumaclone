@@ -80,6 +80,13 @@ describe("official campus demonstration seed", () => {
     expect(normalized).not.toContain("create function");
   });
 
+  it("gives every official event a remote cover image", () => {
+    expect(normalized.match(/https:\/\/images\.unsplash\.com\/photo-/g)).toHaveLength(
+      5,
+    );
+    expect(normalized).toContain("cover_image_url = excluded.cover_image_url");
+  });
+
   it("feeds every existing event view through the published repository", () => {
     for (const page of ["home", "discover", "calendars"]) {
       expect(readFileSync(resolve(`src/app/${page}/page.tsx`), "utf8")).toContain(

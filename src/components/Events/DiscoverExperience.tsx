@@ -16,6 +16,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { categoryCoverImages, eventCoverUrl } from "@/lib/events/cover";
 import type { EventRecord } from "@/lib/events/schema";
 import {
   discoveryFilters,
@@ -127,8 +128,9 @@ export function DiscoverExperience({
             const matching = allEvents.filter(
               (event) => event.category === category,
             );
-            const image = matching.find((event) => event.cover_image_url)
-              ?.cover_image_url;
+            const image =
+              matching.find((event) => event.cover_image_url)?.cover_image_url ??
+              categoryCoverImages[category];
             const Icon = categoryIcons[category] ?? CalendarDays;
             const isActive = activeFilter === category;
 
@@ -188,18 +190,10 @@ function CompactEvent({ event }: { event: EventRecord }) {
         aria-label={`${event.title} cover`}
         className="flex aspect-square size-[4.5rem] items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-violet-950 via-zinc-800 to-orange-950 bg-cover bg-center"
         role="img"
-        style={
-          event.cover_image_url
-            ? {
-                backgroundImage: `url(${JSON.stringify(event.cover_image_url)})`,
-              }
-            : undefined
-        }
-      >
-        {!event.cover_image_url ? (
-          <CalendarDays className="size-5 text-zinc-400" />
-        ) : null}
-      </span>
+        style={{
+          backgroundImage: `url(${JSON.stringify(eventCoverUrl(event))})`,
+        }}
+      ></span>
       <span className="min-w-0 py-0.5">
         <span className="block truncate text-sm text-zinc-500">
           {formatEventDate(event)}

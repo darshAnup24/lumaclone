@@ -1,5 +1,6 @@
 import { CalendarDays, MapPin } from "lucide-react";
 import Link from "next/link";
+import { eventCoverUrl } from "@/lib/events/cover";
 import type { EventRecord } from "@/lib/events/schema";
 import {
   categoryLabel,
@@ -14,18 +15,14 @@ export function EventCard({ event }: { event: EventRecord }) {
       href={`/events/${event.id}`}
       className="group overflow-hidden rounded-2xl border border-zinc-200/80 bg-white/70 shadow-sm backdrop-blur-md transition hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/65 dark:hover:border-zinc-700"
     >
-      {event.cover_image_url ? (
-        <div
-          aria-label={`${event.title} cover`}
-          className="aspect-[16/9] w-full bg-zinc-200 bg-cover bg-center dark:bg-zinc-800"
-          role="img"
-          style={{ backgroundImage: `url(${JSON.stringify(event.cover_image_url)})` }}
-        />
-      ) : (
-        <div className="flex aspect-[16/9] w-full items-end bg-gradient-to-br from-zinc-100 via-purple-100 to-orange-100 p-4 dark:from-zinc-800 dark:via-purple-950 dark:to-zinc-900">
-          <CalendarDays className="size-8 text-zinc-500 dark:text-zinc-400" />
-        </div>
-      )}
+      <div
+        aria-label={`${event.title} cover`}
+        className="aspect-[16/9] w-full bg-zinc-200 bg-cover bg-center dark:bg-zinc-800"
+        role="img"
+        style={{
+          backgroundImage: `url(${JSON.stringify(eventCoverUrl(event))})`,
+        }}
+      />
       <div className="space-y-3 p-4">
         <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
           <span>{eventTypeLabel(event)}</span>

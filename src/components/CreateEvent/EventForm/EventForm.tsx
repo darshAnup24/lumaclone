@@ -8,8 +8,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { categoryCoverImages } from "@/lib/events/cover";
 import { eventCategories, eventLocationTypes } from "@/lib/events/constants";
 import { categoryLabel } from "@/lib/events/presentation";
+import type { EventRecord } from "@/lib/events/schema";
 
 const eventFormSchema = z
   .object({
@@ -43,13 +45,14 @@ const eventFormSchema = z
 
 type EventFormValues = z.infer<typeof eventFormSchema>;
 
-function selectedCoverUrl() {
+function selectedCoverUrl(category: EventRecord["category"]) {
   try {
     const image = JSON.parse(localStorage.getItem("event-image") ?? "null")?.image;
-    return typeof image === "string" && /^https?:\/\//.test(image) ? image : null;
+    if (typeof image === "string" && /^https?:\/\//.test(image)) return image;
   } catch {
-    return null;
+    // fall through to the category default
   }
+  return categoryCoverImages[category];
 }
 
 export default function EventForm() {
@@ -97,7 +100,7 @@ export default function EventForm() {
           location: values.location || null,
           meeting_url: values.meeting_url || null,
           capacity: values.capacity,
-          cover_image_url: selectedCoverUrl(),
+          cover_image_url: selectedCoverUrl(values.category),
           requires_approval: values.requires_approval,
         }),
       });

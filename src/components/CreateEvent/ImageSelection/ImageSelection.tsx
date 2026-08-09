@@ -38,16 +38,39 @@ export default function ImageSelection({
       );
       returnImageColors(predominantColor.hex);
 
-      onSetImage((prev) => ({
-        ...prev,
-        image: previewUrl,
-        credits: object.credits || "Image by user",
-        from: object.from || "User",
-        alt: "Image by user",
-        source: object.url || "",
-      }));
+      try {
+        const formData = new FormData();
+        formData.append("image", object.file);
+        const response = await fetch("/api/images/upload", {
+          method: "POST",
+          body: formData,
+        });
+        const result = (await response.json()) as {
+          url?: string;
+          message?: string;
+        };
+        const url = result.url;
+        if (!response.ok || !url) {
+          throw new Error(result.message || "Upload failed");
+        }
 
-      setIsOpen(false);
+        onSetImage((prev) => ({
+          ...prev,
+          image: url,
+          credits: object.credits || "Image by user",
+          from: object.from || "User",
+          alt: "Image by user",
+          source: object.url || "",
+        }));
+
+        setIsOpen(false);
+      } catch (error) {
+        console.error("Image upload failed", error);
+        toast(
+          "Upload failed. Please check your connection and try again.",
+          ToastTypes.error
+        );
+      }
     } else {
       toast(
         "O arquivo selecionado é inválido. Formatos suportados: PNG e JPG.",
