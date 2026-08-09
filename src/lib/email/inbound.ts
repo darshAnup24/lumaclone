@@ -53,5 +53,5 @@ export async function persistInboundEmail(event: ReceivedEmailEvent, fetcher: ty
     organization_id: organization?.id ?? null,
   }, { onConflict: "message_id", ignoreDuplicates: true });
   if (error) throw error;
-  return { status, matchedOrganization: Boolean(organization) };
+  return { status, matchedOrganization: Boolean(organization), messageId: event.data.message_id ?? event.data.email_id };
 }

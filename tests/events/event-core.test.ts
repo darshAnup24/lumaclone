@@ -36,6 +36,7 @@ const baseRecord = {
   requires_approval: false,
   confidence_score: null,
   possible_duplicate: false,
+  proposed_update_for_event_id: null,
   created_at: now,
   updated_at: now,
   published_at: now,

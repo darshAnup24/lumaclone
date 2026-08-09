@@ -30,6 +30,7 @@ const event: EventRecord = {
   requires_approval: false,
   confidence_score: 0.95,
   possible_duplicate: false,
+  proposed_update_for_event_id: null,
   created_at: "2026-08-09T10:00:00.000+05:30",
   updated_at: "2026-08-09T10:00:00.000+05:30",
   published_at: "2026-08-09T10:00:00.000+05:30",

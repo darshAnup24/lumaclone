@@ -12,6 +12,8 @@ describe("protected route policy", () => {
     "/calendars",
     "/discover",
     "/events/11111111-1111-4111-8111-111111111111",
+    "/admin/review",
+    "/admin/anything",
   ])("protects %s", (pathname) => {
     expect(isProtectedPath(pathname)).toBe(true);
   });

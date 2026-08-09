@@ -1,10 +1,10 @@
 {
   "project": "Campus Luma Clone + Campus Email Event Intelligence",
-  "status": "in_progress",
-  "current_phase": 11,
-  "current_phase_name": "Resend Inbound Email",
+  "status": "complete",
+  "current_phase": 16,
+  "current_phase_name": "Vercel Deployment Readiness",
   "started_at": "2026-08-09T10:53:00+05:30",
-  "updated_at": "2026-08-09T13:48:28+05:30",
+  "updated_at": "2026-08-09T16:10:00+05:30",
   "phases": [
     {
       "id": 0,
@@ -406,10 +406,10 @@
     {
       "id": 11,
       "name": "Resend Inbound Email",
-      "status": "in_progress",
-      "attempts": 1,
+      "status": "passed",
+      "attempts": 2,
       "started_at": "2026-08-09T13:43:30+05:30",
-      "completed_at": null,
+      "completed_at": "2026-08-09T15:00:34+05:30",
       "implementation_evidence": [
         "Added a public email.received webhook that verifies fresh Svix/Resend signatures over the untouched request body before parsing.",
         "Added full received-email content retrieval, raw text/HTML/attachment persistence, message-id idempotency, exact verified official organization matching, unknown-sender review, and failed-content error persistence.",
@@ -418,7 +418,9 @@
       "validation_evidence": [
         "npm test: PASS; 17 files and 92 tests covering authentic/tampered/replayed signatures, display-name distrust, raw persistence, verified matching, unknown review, failure status, and idempotency.",
         "npm run typecheck, npm run lint, npm run build, and git diff --check: PASS; webhook route builds dynamically and only baseline warnings remain.",
-        "Names-only environment template check: PASS. Live webhook validation remains unavailable until RESEND_WEBHOOK_SECRET is configured."
+        "Names-only environment template and configured signing-secret checks: PASS.",
+        "Signed runtime probe: HTTP 200; exact synthetic message persisted as failed with an error and raw-content columns, then the single synthetic row was deleted successfully.",
+        "Detailed evidence is recorded in .codex/campus-email-inbound/validation.md."
       ],
       "failures": [
         "Attempt 1 FAIL: RESEND_WEBHOOK_SECRET is missing, so the live webhook intentionally returns 503 and Phase 11 cannot pass yet.",
@@ -431,67 +433,180 @@
         "src/app/api/webhooks/resend/route.ts",
         "tests/email/inbound-webhook.test.ts",
         "tests/email/inbound-contract.test.ts"
+        ,
+        ".codex/campus-email-inbound/validation.md"
       ]
     },
     {
       "id": 12,
       "name": "AI Event Extraction",
-      "status": "pending",
-      "attempts": 0,
-      "started_at": null,
-      "completed_at": null,
-      "implementation_evidence": [],
-      "validation_evidence": [],
-      "failures": [],
-      "files_changed": []
+      "status": "passed",
+      "attempts": 3,
+      "started_at": "2026-08-09T15:01:00+05:30",
+      "completed_at": "2026-08-09T15:33:48+05:30",
+      "implementation_evidence": [
+        "Added strict schema-validated structured extraction for every required field plus explicit date ambiguity metadata and HTTP(S)-only URLs.",
+        "Added isolated Groq strict JSON-schema and optional OpenAI Responses adapters selected server-side; relative dates use received_at/timezone context and unsupported labels normalize to other.",
+        "Added inbound processing that stores extraction/confidence, creates a unified official/email event, persists failures, and applies the user's auto-publish policy with ambiguity and verified-sender safeguards."
+      ],
+      "validation_evidence": [
+        "npm test: PASS; 19 files and 101 tests, including hackathon, workshop, recruitment, conference, strict response format, relative-date context, category normalization, missing confidence publication, low-confidence review, ambiguity, sender trust, malformed dates, persistence, and failures.",
+        "npm run typecheck, npm run lint, npm run build, and git diff --check: PASS; only seven baseline warnings remain.",
+        "Configured Groq model-list check: openai/gpt-oss-120b is available and active.",
+        "Live Groq strict extraction: PASS after repairing case/label category normalization.",
+        "Final ordinary npm test: PASS; 20 files (19 passed, one opt-in live skipped), 102 tests; typecheck, lint, build, diff and template checks PASS.",
+        "Detailed evidence is recorded in .codex/campus-ai-extraction/validation.md."
+      ],
+      "failures": [
+        "Attempt 1 FAIL: OPENAI_API_KEY and AI_MODEL were missing before the user selected/configured Groq, so live validation was unavailable.",
+        "Attempt 2 FAIL: live Groq output used capitalized Hackathon, which the initial normalizer mapped to other; the phase did not advance."
+      ],
+      "files_changed": [
+        ".env.example",
+        "src/lib/ai/extraction.ts",
+        "src/lib/ai/openai.ts",
+        "src/lib/ai/groq.ts",
+        "src/lib/ai/provider.ts",
+        "src/lib/ai/process.ts",
+        "src/lib/email/inbound.ts",
+        "src/app/api/webhooks/resend/route.ts",
+        "tests/ai/event-extraction.test.ts",
+        "tests/ai/processing-contract.test.ts",
+        "tests/ai/groq-live.test.ts",
+        ".codex/campus-ai-extraction/validation.md"
+      ]
     },
     {
       "id": 13,
       "name": "Admin Review",
-      "status": "pending",
-      "attempts": 0,
-      "started_at": null,
-      "completed_at": null,
-      "implementation_evidence": [],
-      "validation_evidence": [],
-      "failures": [],
-      "files_changed": []
+      "status": "passed",
+      "attempts": 3,
+      "started_at": "2026-08-09T15:40:00+05:30",
+      "completed_at": "2026-08-09T15:45:00+05:30",
+      "implementation_evidence": [
+        "Added an existing-Luma-styled admin review queue for pending/rejected inbound-derived events, including editable extraction fields, source/confidence context, and preserved attachment counts.",
+        "Added strict publish/reject API validation, session-backed database role authorization, RLS-backed mutations, review-status/source scoping, and server-owned status/publication timestamps.",
+        "Kept the explicit user auto-publish override: verified relevant records with absent or sufficient confidence publish automatically, while ambiguous/low-confidence/unverified records remain reviewable; unsupported labels normalize to other."
+      ],
+      "validation_evidence": [
+        "Attempt 3 npm test: PASS; 22 files passed, one opt-in live file skipped, 115 tests passed and one skipped.",
+        "Admin tests cover authentication 401, authorization 403, database profile role checks, strict privilege-field stripping, unknown category publication blocking, rejectability, URL/time validation, and /admin route protection.",
+        "npm run lint, npm run typecheck, npm run build, git diff --check, and anchored credential-value scan: PASS; build retains only seven documented baseline warnings.",
+        "Runtime unauthenticated /admin/review returns 307 to /signin with the safe next path; existing visual components were untouched and the new page reuses EventShell/RandomBg/Header.",
+        "Detailed evidence is recorded in .codex/campus-admin-review/validation.md."
+      ],
+      "failures": [
+        "Attempt 1 FAIL: admin schema rejected legitimate null timestamp and URL fields, causing 7 focused validator test failures; phase did not advance.",
+        "Attempt 2 FAIL: the combined gate exited 1 because an over-broad secret regex matched ordinary identifiers containing re_; implementation tests, lint, build, and typecheck had passed."
+      ],
+      "files_changed": [
+        "src/lib/admin/**",
+        "src/app/admin/review/page.tsx",
+        "src/app/api/admin/events/[id]/route.ts",
+        "src/components/Admin/AdminReviewList.tsx",
+        "src/lib/supabase/middleware.ts",
+        "tests/admin/**",
+        "tests/auth/protected-routes.test.ts",
+        ".codex/campus-admin-review/validation.md"
+      ]
     },
     {
       "id": 14,
       "name": "Duplicate and Update Detection",
-      "status": "pending",
-      "attempts": 0,
-      "started_at": null,
-      "completed_at": null,
-      "implementation_evidence": [],
-      "validation_evidence": [],
-      "failures": [],
-      "files_changed": []
+      "status": "passed",
+      "attempts": 4,
+      "started_at": "2026-08-09T15:47:00+05:30",
+      "completed_at": "2026-08-09T15:54:00+05:30",
+      "implementation_evidence": [
+        "Added exact message idempotency plus organization/sender-scoped duplicate matching across normalized title, field equality, date proximity, and registration URL.",
+        "Added non-public update proposals linked to the existing event, with Old/New admin comparison and Apply Update, Create New, Reject actions.",
+        "Added a locked cloud database proposal-resolution function and event_history snapshots; applying an update changes the existing row without replacing its identity."
+      ],
+      "validation_evidence": [
+        "Attempt 4 npm test: PASS; 25 files passed, one opt-in live file skipped, 131 tests passed and one skipped, including exact reminder, moved-event update, registration URL, unrelated-event, admin UI, and database locking fixtures.",
+        "npm run lint, npm run typecheck, npm run build, git diff --check, and anchored secret scan: PASS; only seven documented baseline warnings remain.",
+        "Cloud dry-run and push applied only 20260809083000_duplicate_update_detection.sql; final migration list confirms all five local/remote versions match.",
+        "Detailed evidence is recorded in .codex/campus-duplicate-update/validation.md."
+      ],
+      "failures": [
+        "Attempt 1 FAIL: typecheck found two typed EventRecord fixtures missing the new proposed_update_for_event_id field; phase did not advance.",
+        "Attempt 2 FAIL: an existing AI persistence contract required the inserted status and published_at condition to use the same visible status variable; phase did not advance.",
+        "Attempt 3 FAIL: full suite found one deep-equality event-core fixture missing the migrated nullable proposal link; phase did not advance."
+      ],
+      "files_changed": [
+        "supabase/migrations/20260809083000_duplicate_update_detection.sql",
+        "src/lib/ai/duplicates.ts",
+        "src/lib/ai/process.ts",
+        "src/lib/events/schema.ts",
+        "src/lib/admin/review.ts",
+        "src/lib/admin/schema.ts",
+        "src/components/Admin/AdminReviewList.tsx",
+        "tests/ai/duplicate-detection.test.ts",
+        "tests/ai/processing-contract.test.ts",
+        "tests/database/duplicate-update-migration.test.ts",
+        "tests/admin/update-proposal-ui.test.ts",
+        "tests/events/event-card.test.ts",
+        "tests/events/event-core.test.ts",
+        "tests/events/event-presentation.test.ts",
+        ".codex/campus-duplicate-update/validation.md"
+      ]
     },
     {
       "id": 15,
       "name": "Security and End-to-End Validation",
-      "status": "pending",
-      "attempts": 0,
-      "started_at": null,
-      "completed_at": null,
-      "implementation_evidence": [],
-      "validation_evidence": [],
-      "failures": [],
-      "files_changed": []
+      "status": "passed",
+      "attempts": 2,
+      "started_at": "2026-08-09T15:56:00+05:30",
+      "completed_at": "2026-08-09T16:04:00+05:30",
+      "implementation_evidence": [
+        "Added an opt-in real cloud RLS abuse test with exact synthetic cleanup for cross-owner events, ownership mutation, self/foreign request decisions, notification privacy, organization verification, and inbound publication authorization.",
+        "Added a live verified-inbound-to-calendar fixture using configured Groq extraction, cloud Supabase publication, and the production published-event repository.",
+        "Kept live cloud tests opt-in so the ordinary deterministic suite remains side-effect free."
+      ],
+      "validation_evidence": [
+        "Live cloud RLS/E2E abuse validation: PASS in 22.6 seconds; intended admin/student operations passed and all unauthorized operations were rejected.",
+        "Live inbound/Groq/cloud/calendar pipeline: PASS in 5.3 seconds using openai/gpt-oss-120b.",
+        "Final npm test: PASS; 25 files passed, three opt-in live files skipped, 131 tests passed and three skipped.",
+        "npm run lint, npm run typecheck, npm run build, git diff --check, cloud migration parity, anchored secret scan, and synthetic cleanup audit: PASS.",
+        "Detailed evidence is recorded in .codex/campus-security-e2e/validation.md."
+      ],
+      "failures": [
+        "Attempt 1 FAIL: opt-in cloud RLS end-to-end test exceeded its 120-second bound before reporting an assertion; phase did not advance and synthetic cleanup audit was required."
+      ],
+      "files_changed": [
+        "tests/security/cloud-rls-live.test.ts",
+        "tests/e2e/inbound-calendar-live.test.ts",
+        ".codex/campus-security-e2e/validation.md"
+      ]
     },
     {
       "id": 16,
       "name": "Vercel Deployment Readiness",
-      "status": "pending",
-      "attempts": 0,
-      "started_at": null,
-      "completed_at": null,
-      "implementation_evidence": [],
-      "validation_evidence": [],
+      "status": "passed",
+      "attempts": 1,
+      "started_at": "2026-08-09T16:08:00+05:30",
+      "completed_at": "2026-08-09T16:10:00+05:30",
+      "implementation_evidence": [
+        "Replaced the placeholder README with exact architecture, student flow, setup, cloud Supabase, Resend, Groq, admin, security, live-validation, and manual Vercel deployment guidance.",
+        "Completed the names-only environment template for required campus services and optional existing cloud image integrations; added a Vercel-compatible 60-second inbound route duration.",
+        "Preserved the no-Docker, no-CI/CD, no-local-image constraint and did not perform an external Vercel deployment."
+      ],
+      "validation_evidence": [
+        "Deployment readiness tests: PASS; 14 tests covering environment documentation, names-only template, required README sections, Vercel duration, and client secret boundaries.",
+        "Final npm test: PASS; 26 files passed, three opt-in live files skipped, 145 tests passed and three skipped.",
+        "npm run lint, npm run typecheck, npm run build, git diff --check, tracked-env boundary, secret scan, and five-migration cloud parity: PASS.",
+        "Final sequential live Groq, cloud RLS abuse, and inbound-to-calendar tests: PASS; synthetic cleanup audit returned all zero counts.",
+        "Production runtime smoke: public pages 200 and protected event/admin pages 307 safely to sign-in.",
+        "Detailed evidence is recorded in .codex/campus-deployment/validation.md."
+      ],
       "failures": [],
-      "files_changed": []
+      "files_changed": [
+        "README.md",
+        ".env.example",
+        "src/app/api/webhooks/resend/route.ts",
+        "tests/deployment/readiness.test.ts",
+        ".codex/campus-deployment/validation.md"
+      ]
     }
   ],
   "blockers": [],
@@ -508,6 +623,8 @@
     "Support both Supabase six-digit email OTP and token-hash email-link callbacks through the unchanged authentication UI."
     ,
     "Use the Supabase cloud free tier only: do not start local Docker services or add CI; validate migrations non-destructively until the intended cloud project is explicitly linked."
+    ,
+    "User override for AI publication: relevant verified-sender items may auto-publish when confidence is missing or meets threshold; unsupported categories normalize to other. Ambiguous dates, low present confidence, unverified senders, and irrelevant content remain review/rejected safeguards."
   ],
   "validation_history": [
     {
@@ -649,7 +766,105 @@
       "timestamp": "2026-08-09T13:48:28+05:30",
       "result": "FAIL",
       "evidence": "Inbound signature/content/persistence implementation and 92-test/build gates passed, but RESEND_WEBHOOK_SECRET is not configured, so live webhook authenticity cannot be validated and the phase did not advance."
+    },
+    {
+      "phase": 11,
+      "attempt": 2,
+      "timestamp": "2026-08-09T15:00:34+05:30",
+      "result": "PASS",
+      "evidence": "Configured signature verification, signed runtime HTTP 200 persistence/failure audit/cleanup, raw content contract, verified/unknown sender handling, idempotency, 92 tests, typecheck, lint, build, and template security passed."
+    },
+    {
+      "phase": 12,
+      "attempt": 1,
+      "timestamp": "2026-08-09T15:06:18+05:30",
+      "result": "FAIL",
+      "evidence": "Strict extraction, user auto-publication policy, four fixture classes, persistence/failure handling, 101 tests, typecheck, lint, build, and diff passed, but missing OPENAI_API_KEY/AI_MODEL prevents live validation; phase did not advance."
+    },
+    {
+      "phase": 12,
+      "attempt": 2,
+      "timestamp": "2026-08-09T15:31:15+05:30",
+      "result": "FAIL",
+      "evidence": "Configured Groq model was active and returned strict structured output, but capitalized Hackathon normalized to other; the phase did not advance."
+    },
+    {
+      "phase": 12,
+      "attempt": 3,
+      "timestamp": "2026-08-09T15:33:48+05:30",
+      "result": "PASS",
+      "evidence": "Active Groq gpt-oss-120b strict live extraction, canonical category normalization, user auto-publish policy, four fixture classes, persistence/failure behavior, 102 tests, typecheck, lint, build, diff and secret-template checks passed."
+    },
+    {
+      "phase": 13,
+      "attempt": 1,
+      "timestamp": "2026-08-09T15:41:00+05:30",
+      "result": "FAIL",
+      "evidence": "Admin review schema rejected legitimate nullable timestamp/URL fields; seven focused tests failed and the phase did not advance."
+    },
+    {
+      "phase": 13,
+      "attempt": 2,
+      "timestamp": "2026-08-09T15:43:00+05:30",
+      "result": "FAIL",
+      "evidence": "Implementation gates passed but an over-broad credential regex produced false-positive re_ identifier matches; the phase did not advance."
+    },
+    {
+      "phase": 13,
+      "attempt": 3,
+      "timestamp": "2026-08-09T15:45:00+05:30",
+      "result": "PASS",
+      "evidence": "Admin edit/publish/reject, server database-role authorization, RLS, unknown-category handling, 115 tests, lint, typecheck, build, runtime redirect, UI preservation, and credential scan passed."
+    },
+    {
+      "phase": 14,
+      "attempt": 1,
+      "timestamp": "2026-08-09T15:47:30+05:30",
+      "result": "FAIL",
+      "evidence": "Typecheck found two typed event fixtures missing the proposal-link field; the phase did not advance."
+    },
+    {
+      "phase": 14,
+      "attempt": 2,
+      "timestamp": "2026-08-09T15:48:00+05:30",
+      "result": "FAIL",
+      "evidence": "An existing AI persistence contract required aligned visible status/publication variables; the phase did not advance."
+    },
+    {
+      "phase": 14,
+      "attempt": 3,
+      "timestamp": "2026-08-09T15:50:10+05:30",
+      "result": "FAIL",
+      "evidence": "Full suite found one deep-equality event fixture missing the proposal link; the phase did not advance."
+    },
+    {
+      "phase": 14,
+      "attempt": 4,
+      "timestamp": "2026-08-09T15:54:00+05:30",
+      "result": "PASS",
+      "evidence": "Exact suppression, update proposals, identity/history preservation, admin outcomes, 131 tests, build gates, cloud migration application, and local/remote parity passed."
+    },
+    {
+      "phase": 15,
+      "attempt": 1,
+      "timestamp": "2026-08-09T15:58:00+05:30",
+      "result": "FAIL",
+      "evidence": "The live cloud RLS validator timed out during sequential user setup; exact partial synthetic resources were audited and removed, and the phase did not advance."
+    },
+    {
+      "phase": 15,
+      "attempt": 2,
+      "timestamp": "2026-08-09T16:04:00+05:30",
+      "result": "PASS",
+      "evidence": "Real cloud abuse rejection, student request/accept notifications, admin publication, live Groq inbound-to-calendar flow, 131 ordinary tests, build gates, migration parity, secret scan, and cleanup passed."
+    },
+    {
+      "phase": 16,
+      "attempt": 1,
+      "timestamp": "2026-08-09T16:10:00+05:30",
+      "result": "PASS",
+      "evidence": "README/environment/Vercel readiness, 145 tests, lint, typecheck, production build, migration parity, secret boundaries, runtime smoke, all final live tests, and zero synthetic cleanup passed."
     }
   ],
-  "last_summary": "Phase 10 passed. Phase 11 is in progress after attempt 1: signed inbound persistence is implemented with 92 passing tests, but RESEND_WEBHOOK_SECRET must be configured and exposed credentials rotated before revalidation; phase did not advance."
+  "last_summary": "All required phases 0-16 passed. Campus Luma preserves the existing UI and now includes cloud Supabase auth/data/RLS, unified official/student events, join approvals, notifications, Resend inbound/outbound, Groq extraction with the user's auto-publish policy, admin review, duplicate/update resolution, live security/E2E validation, and documented Vercel readiness. Final gates: 145 ordinary tests passed, three live suites passed explicitly, production build passed, five cloud migrations match, secret checks passed, and synthetic cleanup is zero."
 }

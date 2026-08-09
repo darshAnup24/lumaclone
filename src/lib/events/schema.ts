@@ -44,6 +44,7 @@ export const eventRecordSchema = z
     requires_approval: z.boolean(),
     confidence_score: z.number().min(0).max(1).nullable(),
     possible_duplicate: z.boolean(),
+    proposed_update_for_event_id: z.string().uuid().nullable().default(null),
     created_at: z.string().datetime({ offset: true }),
     updated_at: z.string().datetime({ offset: true }),
     published_at: optionalTimestamp,

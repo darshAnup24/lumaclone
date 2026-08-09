@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { persistInboundEmail, receivedEmailEventSchema } from "@/lib/email/inbound";
 import { verifyResendWebhook } from "@/lib/email/webhook";
+import { processInboundEmail } from "@/lib/ai/process";
+
+export const maxDuration = 60;
 
 export async function POST(request: Request) {
   const secret = process.env.RESEND_WEBHOOK_SECRET;
@@ -13,6 +16,7 @@ export async function POST(request: Request) {
     const payload = JSON.parse(body) as { type?: string };
     if (payload.type !== "email.received") return NextResponse.json({ received: true });
     const result = await persistInboundEmail(receivedEmailEventSchema.parse(payload));
+    if (result.status !== "failed") await processInboundEmail(result.messageId);
     return NextResponse.json({ received: true, ...result });
   } catch (error) {
     console.error("Inbound Resend webhook failed", error);

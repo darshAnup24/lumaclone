@@ -10,6 +10,7 @@ const protectedPrefixes = [
   "/calendars",
   "/discover",
   "/events",
+  "/admin",
 ];
 
 export function isProtectedPath(pathname: string) {
