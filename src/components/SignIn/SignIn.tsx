@@ -1,12 +1,32 @@
 "use client";
+import { useState } from "react";
 import { CiLogin } from "react-icons/ci";
 import { BsGoogle } from "react-icons/bs";
+import { Loader2Icon } from "lucide-react";
+import toast from "react-hot-toast";
 import { SignInForm } from "./SignInForm";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { signInWithGoogle } from "@/lib/auth/browser";
 
 export function SignIn() {
   const { t } = useTranslation();
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
+  const continueWithGoogle = async () => {
+    try {
+      setIsGoogleLoading(true);
+      await signInWithGoogle();
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Unable to start Google sign-in. Please try again.",
+      );
+      setIsGoogleLoading(false);
+    }
+  };
+
   return (
     <div className="flex w-full h-[90vh] items-center">
       <div className="m-auto flex justify-center">
@@ -30,12 +50,21 @@ export function SignIn() {
           </div>
           <hr className="dark:border-zinc-700 border-zinc-300" />
           <div className="px-6 py-3 w-full justify-center mb-2">
-            <button className="mt-2 flex gap-2 p-2 rounded-lg transition w-full font-medium
+            <button
+              type="button"
+              onClick={continueWithGoogle}
+              disabled={isGoogleLoading}
+              className="mt-2 flex gap-2 p-2 rounded-lg transition w-full font-medium disabled:cursor-not-allowed disabled:opacity-60
             dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-400 dark:hover:text-zinc-900
             bg-zinc-200 text-zinc-600 hover:bg-zinc-600 hover:text-zinc-100
             ">
               <span className="items-center flex gap-2 mx-auto">
-                <BsGoogle size={20} /> {t("SignIn.continueWith.google")}
+                {isGoogleLoading ? (
+                  <Loader2Icon className="animate-spin h-5 w-5" />
+                ) : (
+                  <BsGoogle size={20} />
+                )}
+                {t("SignIn.continueWith.google")}
               </span>
             </button>
           </div>

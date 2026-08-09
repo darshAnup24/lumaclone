@@ -1,6 +1,6 @@
-# Campus Luma
+# Campus LeviClub
 
-Campus Luma preserves the existing Luma clone interface and adds one campus activity system for official events extracted from institutional email and student-created activities.
+Campus LeviClub preserves the existing LeviClub clone interface and adds one campus activity system for official events extracted from institutional email and student-created activities.
 
 ## Architecture
 
@@ -13,7 +13,7 @@ Institutional email
   → duplicate/update detection
   → automatic publication or admin review
   → unified Supabase events table
-  → existing Luma event and calendar UI
+  → existing LeviClub event and calendar UI
 ```
 
 Automatic publication follows the configured policy: a relevant email from a verified sender is published when confidence is absent or meets `AI_AUTO_PUBLISH_THRESHOLD`. Low-confidence, ambiguous, unverified, and likely-update records stay in `/admin/review`. Unsupported AI category labels normalize to `other`; legacy `unknown` records must be categorized by an admin before publication.
@@ -68,7 +68,7 @@ Required for the campus application:
 | `GROQ_MODEL` | Server only | Tested with `openai/gpt-oss-120b` |
 | `AI_AUTO_PUBLISH_THRESHOLD` | Server only | Confidence threshold, normally `0.75` |
 
-`OPENAI_API_KEY` and `AI_MODEL` are optional alternatives when `AI_PROVIDER=openai`. `CLOUDINARY_*` and `UNSPLASH_ACCESS_KEY` are optional legacy Luma image integrations; event covers remain cloud URLs and are not downloaded into the repository.
+`OPENAI_API_KEY` and `AI_MODEL` are optional alternatives when `AI_PROVIDER=openai`. `CLOUDINARY_*` and `UNSPLASH_ACCESS_KEY` are optional legacy LeviClub image integrations; event covers remain cloud URLs and are not downloaded into the repository.
 
 Never prefix the service-role, Resend, Groq, OpenAI, or Cloudinary secret with `NEXT_PUBLIC_`.
 
@@ -89,8 +89,10 @@ Five ordered migrations create the unified data model, Row Level Security polici
 Supabase Authentication configuration:
 
 1. Set the production Site URL to the deployed origin.
-2. Add `https://YOUR_DOMAIN/auth/confirm` to allowed redirect URLs (and the localhost equivalent for development).
-3. Create/sign in the first admin, then set the role in the Supabase SQL editor:
+2. Add `https://YOUR_DOMAIN/auth/confirm` and `https://YOUR_DOMAIN/auth/callback` to allowed redirect URLs. For local development, also add the same paths under `http://localhost:3000`.
+3. In **Authentication → Email Templates → Magic Link**, keep a clickable magic-link template using `{{ .ConfirmationURL }}`. Do not replace it with a six-digit `{{ .Token }}` OTP template.
+4. In **Authentication → Providers → Google**, enable Google and add the OAuth client ID and secret from Google Cloud. In the Google OAuth client, use Supabase's callback URL `https://YOUR_PROJECT_REF.supabase.co/auth/v1/callback` as an authorized redirect URI.
+5. Create/sign in the first admin, then set the role in the Supabase SQL editor:
 
 ```sql
 update public.profiles

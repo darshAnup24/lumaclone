@@ -15,7 +15,7 @@ type EventPageProps = { params: Promise<{ id: string }> };
 
 export async function generateMetadata({ params }: EventPageProps): Promise<Metadata> {
   const event = await loadPublishedEvent((await params).id);
-  return { title: event ? `${event.title} · Luma` : "Event · Luma" };
+  return { title: event ? `${event.title} · LeviClub` : "Event · LeviClub" };
 }
 
 export default async function EventPage({ params }: EventPageProps) {

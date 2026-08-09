@@ -8,7 +8,7 @@ import {
   groupEventsByDay,
 } from "@/lib/events/presentation";
 
-export const metadata: Metadata = { title: "Calendar · Luma" };
+export const metadata: Metadata = { title: "Calendar · LeviClub" };
 export const dynamic = "force-dynamic";
 
 export default async function CalendarsPage() {

@@ -4,7 +4,7 @@ import { EventShell } from "@/components/Events/EventShell";
 import { loadPublishedEvents } from "@/lib/events/load";
 import { filterEvents, parseDiscoveryFilter } from "@/lib/events/presentation";
 
-export const metadata: Metadata = { title: "Discover · Luma" };
+export const metadata: Metadata = { title: "Discover · LeviClub" };
 export const dynamic = "force-dynamic";
 
 type DiscoverPageProps = {

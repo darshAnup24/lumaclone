@@ -1,36 +1,19 @@
-import type { EmailOtpType } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-
-const allowedTypes = new Set<EmailOtpType>([
-  "email",
-  "signup",
-  "recovery",
-  "invite",
-  "magiclink",
-  "email_change",
-]);
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
-  const tokenHash = requestUrl.searchParams.get("token_hash");
-  const type = requestUrl.searchParams.get("type") as EmailOtpType | null;
   const requestedNext = requestUrl.searchParams.get("next");
   const next =
     requestedNext?.startsWith("/") && !requestedNext.startsWith("//")
       ? requestedNext
       : "/home";
 
-  if (code || (tokenHash && type && allowedTypes.has(type))) {
+  if (code) {
     try {
       const supabase = await createSupabaseServerClient();
-      const { error } = code
-        ? await supabase.auth.exchangeCodeForSession(code)
-        : await supabase.auth.verifyOtp({
-            token_hash: tokenHash!,
-            type: type!,
-          });
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
 
       if (!error) return NextResponse.redirect(new URL(next, requestUrl.origin));
     } catch {
@@ -39,6 +22,6 @@ export async function GET(request: Request) {
   }
 
   const errorUrl = new URL("/signin", requestUrl.origin);
-  errorUrl.searchParams.set("error", "Unable to verify the sign-in link.");
+  errorUrl.searchParams.set("error", "Unable to complete Google sign-in.");
   return NextResponse.redirect(errorUrl);
 }

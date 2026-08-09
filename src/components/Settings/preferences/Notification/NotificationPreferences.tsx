@@ -1,7 +1,7 @@
 import { IoMailOpen } from "react-icons/io5";
 import { NotificationPopover } from "./NotificationPopover";
 import { AlarmClockIcon, Calendar, CalendarClock, FileText, Globe, Megaphone, Star, TicketPlus, UserCheck2, UserPlus2 } from "lucide-react";
-import { LumaLogoSVG } from "@/components/LumaLogo";
+import { BrandMarkSVG } from "@/components/BrandLogo";
 import { SubscriptionSheet } from "./SubscriptionSheet";
 import { useTranslation } from "react-i18next";
 
@@ -100,7 +100,7 @@ export function NotificationPreferences() {
   ];
   
   const LumaUpdates = [{
-    icon: <LumaLogoSVG />,
+    icon: <BrandMarkSVG />,
     title: t("Settings.preferences.notifications.luma.updates"),
     options: [
       { name: "E-mail", value: "email" },

@@ -1,11 +1,9 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
-const pendingEmailKey = "campus-luma-pending-email";
-
-export async function requestEmailOtp(email: string) {
+export async function requestMagicLink(email: string) {
   const normalizedEmail = email.trim().toLowerCase();
   const supabase = getSupabaseBrowserClient();
-  const redirectTo = `${window.location.origin}/auth/confirm`;
+  const redirectTo = `${window.location.origin}/auth/confirm?next=/home`;
   const { error } = await supabase.auth.signInWithOtp({
     email: normalizedEmail,
     options: {
@@ -15,27 +13,18 @@ export async function requestEmailOtp(email: string) {
   });
 
   if (error) throw error;
-  sessionStorage.setItem(pendingEmailKey, normalizedEmail);
 }
 
-export function getPendingEmail() {
-  return sessionStorage.getItem(pendingEmailKey);
-}
-
-export async function verifyEmailOtp(token: string) {
-  const email = getPendingEmail();
-  if (!email) throw new Error("Your sign-in attempt expired. Please request a new code.");
-
+export async function signInWithGoogle() {
   const supabase = getSupabaseBrowserClient();
-  const { data, error } = await supabase.auth.verifyOtp({
-    email,
-    token,
-    type: "email",
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${window.location.origin}/auth/callback?next=/home`,
+    },
   });
 
   if (error) throw error;
-  sessionStorage.removeItem(pendingEmailKey);
-  return data.user;
 }
 
 export async function getBrowserUser() {

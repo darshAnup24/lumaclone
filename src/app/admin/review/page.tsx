@@ -10,7 +10,7 @@ import {
 import { listAdminReviewItems } from "@/lib/admin/review";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export const metadata: Metadata = { title: "Admin Review · Luma" };
+export const metadata: Metadata = { title: "Admin Review · LeviClub" };
 export const dynamic = "force-dynamic";
 
 export default async function AdminReviewPage() {

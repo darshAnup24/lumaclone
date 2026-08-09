@@ -5,7 +5,7 @@ import { EventCollection } from "@/components/Events/EventCollection";
 import { EventShell } from "@/components/Events/EventShell";
 import { loadPublishedEvents } from "@/lib/events/load";
 
-export const metadata: Metadata = { title: "Home · Luma" };
+export const metadata: Metadata = { title: "Home · LeviClub" };
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {

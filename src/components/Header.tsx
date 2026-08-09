@@ -4,7 +4,7 @@ import Link from "next/link";
 import { UserClock } from "./UserClock";
 import { UserDropdown } from "./UserDropdown";
 import { NotificationMenu } from "./Notifications/NotificationMenu";
-import { LumaLogoSVG } from "./LumaLogo";
+import { BrandMarkSVG, BrandWordmark } from "./BrandLogo";
 import { useTranslation } from "react-i18next";
 interface HeaderProps {
   logoStyle?: "icon" | "wordmark";
@@ -25,13 +25,9 @@ export function Header({
           className="hover:brightness-200 transition 2s hover:cursor-pointer"
         >
           {logoStyle === "icon" ? (
-            <LumaLogoSVG />
+            <BrandMarkSVG />
           ) : (
-            <img
-              src="/Luma/wordmark-light.png"
-              alt="Luma logo"
-              className="w-[3rem] dark:hover:opacity-100 hover:fill-zinc-700 invert dark:invert-0 transition"
-            />
+            <BrandWordmark className="text-lg opacity-80 transition hover:opacity-100" />
           )}
         </Link>
         {isSignedIn ? (
@@ -76,7 +72,7 @@ export function Header({
           </>
         ) : (
           <>
-            <Link href={'/explore'} className="dark:hover:text-zinc-50 hover:text-zinc-950 transition text-zinc-500 font-medium flex flex-row gap-1 items-center">{t("Header.explore")} <ArrowUpRight size={15} /></Link>
+            <Link href={'/'} className="dark:hover:text-zinc-50 hover:text-zinc-950 transition text-zinc-500 font-medium flex flex-row gap-1 items-center">{t("Header.explore")} <ArrowUpRight size={15} /></Link>
             <Link
               href={"/signin"}
               className="font-semibold opacity-[.7] transition text-sm px-3 py-1 rounded-full

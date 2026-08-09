@@ -1,10 +1,10 @@
 {
-  "project": "Campus Luma Clone + Campus Email Event Intelligence",
+  "project": "LeviClub + Campus Email Event Intelligence",
   "status": "complete",
   "current_phase": 16,
   "current_phase_name": "Vercel Deployment Readiness",
   "started_at": "2026-08-09T10:53:00+05:30",
-  "updated_at": "2026-08-09T16:26:00+05:30",
+  "updated_at": "2026-08-09T17:26:39+05:30",
   "phases": [
     {
       "id": 0,
@@ -89,13 +89,13 @@
       "id": 2,
       "name": "Authentication",
       "status": "passed",
-      "attempts": 4,
+      "attempts": 5,
       "started_at": "2026-08-09T11:43:20+05:30",
       "completed_at": "2026-08-09T11:54:05+05:30",
       "implementation_evidence": [
         "Added @supabase/ssr browser/server clients and middleware cookie refresh with environment validation.",
-        "Rewired the existing Luma email and OTP screens to Supabase signInWithOtp/verifyOtp while preserving their markup and Tailwind styling.",
-        "Implemented token-hash callback verification, visible safe auth errors, user metadata completion, session restoration, and Supabase logout.",
+        "Rewired the existing Luma email screen to Supabase magic-link authentication and removed the phone/OTP-entry branches while preserving the card, inputs, buttons, spacing, and responsive behavior.",
+        "Implemented Google OAuth, PKCE code exchange plus token-hash magic-link compatibility, visible safe auth errors, user metadata completion, session restoration, and Supabase logout.",
         "Protected /home, /create, /settings, and /finish-signup; migrated profile image upload to server-session identity and removed legacy client-trusted JWT/OTP/user endpoints.",
         "Added .env.example names-only Supabase configuration, 16 auth contract tests, runtime redirect evidence, and desktop/mobile UI regression captures."
       ],
@@ -108,6 +108,8 @@
         "Runtime invalid callback gate: PASS after repair; redirects 307 to sign-in with a safe error instead of crashing.",
         "UI regression: desktop sign-in is visually equivalent to Phase 0; desktop/mobile captures stored in .codex/campus-auth/ui-regression.",
         "Secret boundary scan: only NEXT_PUBLIC Supabase URL/anon names appear in client-reachable code; service-role value is absent and unused."
+        ,
+        "Post-completion auth repair: 149 tests passed (3 live suites skipped), lint/typecheck/build passed, /verifyAccount was absent from the route build, both callback routes compiled, desktop/mobile sign-in inspection preserved the documented Luma geometry, and diff/secret checks passed."
       ],
       "failures": [
         "Resolved: standalone typecheck initially read stale .next types for deleted legacy auth routes.",
@@ -127,14 +129,18 @@
         "src/lib/auth/browser.ts",
         "src/lib/auth/server.ts",
         "src/app/auth/confirm/route.ts",
+        "src/app/auth/callback/route.ts",
+        "src/app/verifyAccount/page.tsx (removed)",
         "src/app/api/auth/** (removed)",
         "src/app/api/user/route.ts (removed)",
         "src/app/api/user/upload-image/route.ts",
         "src/app/create/page.tsx",
         "src/app/settings/page.tsx",
         "src/components/SignIn/SignInForm.tsx",
-        "src/components/SignIn/OtpLogin.tsx",
+        "src/components/SignIn/OtpLogin.tsx (removed)",
         "src/components/SignIn/CreateUsernameForm.tsx",
+        "src/translations/en/global.json",
+        "src/translations/pt/global.json",
         "src/components/UserDropdown.tsx",
         "src/components/CreateEvent/**"
       ]
@@ -583,14 +589,15 @@
       "id": 16,
       "name": "Vercel Deployment Readiness",
       "status": "passed",
-      "attempts": 2,
+      "attempts": 3,
       "started_at": "2026-08-09T16:08:00+05:30",
-      "completed_at": "2026-08-09T16:26:00+05:30",
+      "completed_at": "2026-08-09T17:26:39+05:30",
       "implementation_evidence": [
         "Replaced the placeholder README with exact architecture, student flow, setup, cloud Supabase, Resend, Groq, admin, security, live-validation, and manual Vercel deployment guidance.",
         "Completed the names-only environment template for required campus services and optional existing cloud image integrations; added a Vercel-compatible 60-second inbound route duration.",
         "Preserved the no-Docker, no-CI/CD, no-local-image constraint and did not perform an external Vercel deployment.",
-        "Repaired Vercel's vulnerable-framework block by pinning Next.js and its ESLint config from 15.1.7 to the latest Next 15 maintenance release, 15.5.23."
+        "Repaired Vercel's vulnerable-framework block by pinning Next.js and its ESLint config from 15.1.7 to the latest Next 15 maintenance release, 15.5.23.",
+        "Rebranded all visible product copy and metadata to LeviClub using a native text wordmark, with no new image asset, and routed every landing-footer item to the application root."
       ],
       "validation_evidence": [
         "Deployment readiness tests: PASS; 14 tests covering environment documentation, names-only template, required README sections, Vercel duration, and client secret boundaries.",
@@ -599,7 +606,8 @@
         "Final sequential live Groq, cloud RLS abuse, and inbound-to-calendar tests: PASS; synthetic cleanup audit returned all zero counts.",
         "Production runtime smoke: public pages 200 and protected event/admin pages 307 safely to sign-in.",
         "Detailed evidence is recorded in .codex/campus-deployment/validation.md.",
-        "Post-deployment repair validation on Next.js 15.5.23: 145 tests, typecheck, lint, production build, and diff integrity PASS."
+        "Post-deployment repair validation on Next.js 15.5.23: 145 tests, typecheck, lint, production build, and diff integrity PASS.",
+        "LeviClub branding/link repair: 152 tests passed with 3 opt-in live tests skipped; lint, typecheck, build, secret/diff checks, desktop runtime screenshot, and rendered root-link audit passed."
       ],
       "failures": [],
       "files_changed": [
@@ -608,6 +616,14 @@
         "src/app/api/webhooks/resend/route.ts",
         "package.json",
         "package-lock.json",
+        "src/components/BrandLogo.tsx",
+        "src/components/LumaLogo.tsx (removed)",
+        "src/components/Header.tsx",
+        "src/components/Footer.tsx",
+        "src/app/page.tsx",
+        "src/translations/en/global.json",
+        "src/translations/pt/global.json",
+        "tests/ui/branding.test.ts",
         "tests/deployment/readiness.test.ts",
         ".codex/campus-deployment/validation.md"
       ]
@@ -624,12 +640,13 @@
     "Disable email auto-publishing for MVP regardless of confidence; all extracted records begin in pending_review."
     ,
     "Use Supabase SSR cookie sessions and server getUser verification; remove the legacy local-storage JWT/OTP endpoints rather than leaving a parallel authentication path.",
-    "Support both Supabase six-digit email OTP and token-hash email-link callbacks through the unchanged authentication UI."
+    "Use only Google OAuth and Supabase emailed magic links on the sign-in UI; remove phone and manual OTP entry, and support both PKCE-code and token-hash email callbacks before redirecting to /home."
     ,
     "Use the Supabase cloud free tier only: do not start local Docker services or add CI; validate migrations non-destructively until the intended cloud project is explicitly linked."
     ,
     "User override for AI publication: relevant verified-sender items may auto-publish when confidence is missing or meets threshold; unsupported categories normalize to other. Ambiguous dates, low present confidence, unverified senders, and irrelevant content remain review/rejected safeguards.",
-    "Pin Next.js and eslint-config-next to 15.5.23 after Vercel blocked the vulnerable 15.1.7 deployment; do not use the dangerous vulnerable-deployment bypass."
+    "Pin Next.js and eslint-config-next to 15.5.23 after Vercel blocked the vulnerable 15.1.7 deployment; do not use the dangerous vulnerable-deployment bypass.",
+    "Use LeviClub as the visible product brand; keep the existing Luma-derived layout as the UI baseline, render the wordmark without a new image asset, and temporarily route every landing-footer link to the same-site root."
   ],
   "validation_history": [
     {
@@ -876,7 +893,21 @@
       "timestamp": "2026-08-09T16:26:00+05:30",
       "result": "PASS",
       "evidence": "Vercel's vulnerable Next.js 15.1.7 block was repaired by pinning latest Next 15 maintenance release 15.5.23 with matching ESLint config; 145 tests, typecheck, lint, production build, and diff integrity passed."
+    },
+    {
+      "phase": 2,
+      "attempt": 5,
+      "timestamp": "2026-08-09T16:58:48+05:30",
+      "result": "PASS",
+      "evidence": "Post-completion authentication repair replaced manual OTP/phone login with Google OAuth and emailed Supabase magic links; PKCE and token-hash callbacks, safe redirects/errors, 149 tests, lint, typecheck, production build, desktop/mobile UI inspection, diff integrity, and secret scan passed."
+    },
+    {
+      "phase": 16,
+      "attempt": 3,
+      "timestamp": "2026-08-09T17:26:39+05:30",
+      "result": "PASS",
+      "evidence": "Visible branding and metadata changed to LeviClub without new image assets; all landing-footer links resolve to / on the deployment host. 152 tests, lint, typecheck, production build, desktop runtime inspection, root-link audit, diff integrity, and secret scan passed."
     }
   ],
-  "last_summary": "All required phases 0-16 passed. Vercel's vulnerable Next.js 15.1.7 block was repaired by pinning Next.js and eslint-config-next 15.5.23. Campus Luma preserves the existing UI and includes cloud Supabase auth/data/RLS, unified official/student events, join approvals, notifications, Resend inbound/outbound, Groq extraction with the user's auto-publish policy, admin review, duplicate/update resolution, live security/E2E validation, and documented Vercel readiness. Final repair gates: 145 tests, typecheck, lint, production build, and diff integrity passed."
+  "last_summary": "All required phases 0-16 remain passed. The visible product brand is now LeviClub across landing/auth/settings copy and route metadata, using a native text wordmark with no new downloaded image. Every link in the landing footer resolves to /, which stays on https://lumaclone-fawn.vercel.app/ in production. The Google OAuth and emailed Supabase magic-link flow remains intact. Final gates: 152 tests passed with 3 opt-in live suites skipped, lint, typecheck, production build, desktop UI inspection, rendered link audit, diff integrity, and secret scan passed."
 }

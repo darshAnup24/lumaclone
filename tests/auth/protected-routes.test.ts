@@ -18,7 +18,7 @@ describe("protected route policy", () => {
     expect(isProtectedPath(pathname)).toBe(true);
   });
 
-  it.each(["/", "/signin", "/verifyAccount", "/auth/confirm"])(
+  it.each(["/", "/signin", "/auth/confirm", "/auth/callback"])(
     "keeps %s public",
     (pathname) => {
       expect(isProtectedPath(pathname)).toBe(false);

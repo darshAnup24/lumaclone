@@ -1,14 +1,13 @@
 {
   "titles": {
-    "home": "Luma ∙ Enchanting events start here",
-    "signIn": "Sign In ∙ Luma",
-    "verifyAccount": "Verify your account ∙ Luma",
-    "finishSignUp": "Finish signing up ∙ Luma",
-    "homeAuthenticated": "Home ∙ Luma",
-    "accountSettings": "Account Settings ∙ Luma",
-    "preferencesSettings": "Preferences ∙ Luma",
-    "paymentSettings": "Payment Settings ∙ Luma",
-    "createEvent": "Create event ∙ Luma"
+    "home": "LeviClub ∙ Enchanting events start here",
+    "signIn": "Sign In ∙ LeviClub",
+    "finishSignUp": "Finish signing up ∙ LeviClub",
+    "homeAuthenticated": "Home ∙ LeviClub",
+    "accountSettings": "Account Settings ∙ LeviClub",
+    "preferencesSettings": "Preferences ∙ LeviClub",
+    "paymentSettings": "Payment Settings ∙ LeviClub",
+    "createEvent": "Create event ∙ LeviClub"
   },
   "Header": {
     "nav": {
@@ -41,26 +40,15 @@
     "security": "Security",
     "clone": "Clone made by "
   },
-  "Welcome": "Welcome to Luma",
+  "Welcome": "Welcome to LeviClub",
   "SignIn": {
-    "title": "Welcome to Luma",
+    "title": "Welcome to LeviClub",
     "subtitle": "Please sign in or register below",
     "emailPlaceholder": "you@email.com",
-    "phonePlaceholder": "+1 123 456 7890",
-    "usePhone": "Use Phone",
-    "useEmail": "Use Email",
-    "phoneNumber": "Phone Number",
     "continueWith": {
       "google": "Continue with Google",
-      "phone": "Continue with Phone",
       "email": "Continue with Email"
     }
-  },
-  "OTPLogin": {
-    "title": "OTP Code",
-    "subtitle": "Please enter the OTP code sent to the provided email to sign in.",
-    "resend": "Resend ",
-    "verify": "Submit"
   },
   "Settings": {
     "title": "Settings",
@@ -97,12 +85,12 @@
         },
         "main": "Main",
         "mainEmailObservation": "This email will be shared with hosts when you register for their events.",
-        "emailObservation": "Invitations sent to this email will be linked to your Luma account.",
+        "emailObservation": "Invitations sent to this email will be linked to your LeviClub account.",
         "tooltip": "Actions",
         "changeEmail": {
           "button": "Change Email",
           "title": "Change Email",
-          "subtitle": "Change your primary Luma email address. This email is shared with hosts when you register for their events.",
+          "subtitle": "Change your primary LeviClub email address. This email is shared with hosts when you register for their events.",
           "label": "New Email Address",
           "placeholder": "you@email.com",
           "update": "Update"
@@ -119,7 +107,7 @@
       },
       "Phone": {
         "title": "Phone Number",
-        "subtitle": "Manage the phone number you use to sign in to Luma and receive SMS updates.",
+        "subtitle": "Manage the phone number you use to sign in to LeviClub and receive SMS updates.",
         "label": "Phone",
         "phonePlaceholder": "+1 123 456 7890",
         "securityObservation": "For your security, we will send a code to verify any changes to your phone number.",
@@ -140,14 +128,14 @@
       },
       "ThirdpartyAccounts": {
         "title": "Third-Party Accounts",
-        "subtitle": "Link your accounts to sign in to Luma and automate your workflows.",
+        "subtitle": "Link your accounts to sign in to LeviClub and automate your workflows.",
         "connectedAccount": "Connected",
         "notConnectedAccount": "Not Connected"
       },
       "AccountSync": {
         "title": "Account Sync",
         "calendarSync": "Calendar Sync",
-        "calendarSyncObservation": "Sync your Luma calendar with Google, Outlook, or Apple.",
+        "calendarSyncObservation": "Sync your LeviClub calendar with Google, Outlook, or Apple.",
         "addiCalSubscription": {
           "button": "Add iCal Subscription",
           "title": "Add iCal Subscription",
@@ -157,14 +145,14 @@
           "SystemCalendar": "System Calendar",
           "CopyURL": "Copy URL to Clipboard"
         },
-        "syncAccountObservation": "Sync your Luma account with other platforms to automate your workflows.",
+        "syncAccountObservation": "Sync your LeviClub account with other platforms to automate your workflows.",
         "googleSync": "Sync Contacts with Google",
         "googleSyncObservation": "Sync your Gmail contacts to easily invite them to your events.",
         "activateGoogleSync": "Activate Sync"
       },
       "ActiveDevices": {
         "title": "Active Devices",
-        "subtitle": "View the list of devices you are currently signed in to Luma on.",
+        "subtitle": "View the list of devices you are currently signed in to LeviClub on.",
         "thisDevice": "This Device",
         "removeDevice": {
           "title": "Sign Out from Device",
@@ -175,7 +163,7 @@
       },
       "DeleteAccount": {
         "title": "Delete Account",
-        "subtitle": "If you no longer wish to use Luma, you can permanently delete your account.",
+        "subtitle": "If you no longer wish to use LeviClub, you can permanently delete your account.",
         "delete": {
           "button": "Delete My Account",
           "title": "Delete Account",
@@ -189,7 +177,7 @@
     "preferences": {
       "exhibition": {
         "title": "Display",
-        "subtitle": "Choose your preferred Luma interface.",
+        "subtitle": "Choose your preferred LeviClub interface.",
         "systemMode": "System",
         "lightMode": "Light",
         "darkMode": "Dark",
@@ -219,25 +207,25 @@
           "eventSubmissions": "Event Submissions"
         },
         "luma": {
-          "title": "Luma",
+          "title": "LeviClub",
           "updates": "Product Updates"
         },
         "yourSubscriptions": {
           "title": "Your Subscriptions",
-          "discoverPages": "Luma Discover Pages",
+          "discoverPages": "LeviClub Discover Pages",
           "page": "Page",
           "calendars": "Calendars",
           "calendar": "Calendar",
           "manageSubscriptions": "Manage Subscriptions",
           "yourSubscriptions": "Your Subscriptions",
-          "subtitle": "Choose which Luma discovery pages you want to follow and manage your calendar subscriptions.",
+          "subtitle": "Choose which LeviClub discovery pages you want to follow and manage your calendar subscriptions.",
           "tabs": {
             "discoverPages": "Discover Pages",
             "calendars": "Calendars"
           },
           "noPages": {
             "title": "No Discover Pages",
-            "subtitle": "You are not following any Luma discovery pages yet."
+            "subtitle": "You are not following any LeviClub discovery pages yet."
           },
           "noCalendars": {
             "title": "No Calendars",
@@ -255,19 +243,19 @@
           "toast": "This demo does not support adding a payment method",
           "button": "Add Card",
           "title": "Add Card",
-          "description": "Add a card to quickly buy tickets or pay for Luma Plus. Your information is encrypted and securely processed by Stripe.",
+          "description": "Add a card to quickly buy tickets or pay for LeviClub Plus. Your information is encrypted and securely processed by Stripe.",
           "placeholder": "Card Number"
         }
       },
       "lumaPlus": {
-        "title": "Luma Plus",
+        "title": "LeviClub Plus",
         "description": "Enjoy 0% platform fees, higher invite and admin limits, priority support, and more.",
         "learnMore": "Learn more",
-        "span": "Luma Plus applies on the calendar level. Choose the desired calendar above to manage its Luma Plus membership.",
+        "span": "LeviClub Plus applies on the calendar level. Choose the desired calendar above to manage its LeviClub Plus membership.",
         "calendarSection": {
           "noCalendars": {
             "title": "No Calendars",
-            "subtitle": "You have no calendars. To sign up for Luma Plus, please first ",
+            "subtitle": "You have no calendars. To sign up for LeviClub Plus, please first ",
             "subtitleLink": "create a calendar"
           }
         }
@@ -276,7 +264,7 @@
         "title": "Payment History",
         "noPayments": {
           "title": "No Payments",
-          "subtitle": "Your payments will appear here. To view Luma Plus payments, select the corresponding calendar from the section above."
+          "subtitle": "Your payments will appear here. To view LeviClub Plus payments, select the corresponding calendar from the section above."
         }
       }
     }
