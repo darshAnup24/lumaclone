@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { EventCollection } from "@/components/Events/EventCollection";
+import { DiscoverExperience } from "@/components/Events/DiscoverExperience";
 import { EventShell } from "@/components/Events/EventShell";
 import { loadPublishedEvents } from "@/lib/events/load";
 import { filterEvents, parseDiscoveryFilter } from "@/lib/events/presentation";
@@ -18,23 +18,12 @@ export default async function DiscoverPage({ searchParams }: DiscoverPageProps) 
 
   return (
     <EventShell>
-      <div className="mb-7">
-        <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">Around campus</p>
-        <h1 className="mt-1 text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-          Discover events
-        </h1>
-        <p className="mt-2 max-w-2xl text-sm text-zinc-600 dark:text-zinc-400">
-          Official announcements and student-led activities, together in one place.
-        </p>
-      </div>
-      <div className="space-y-5">
-        <EventCollection
-          {...result}
-          activeFilter={filter}
-          events={events}
-          showFilters
-        />
-      </div>
+      <DiscoverExperience
+        {...result}
+        activeFilter={filter}
+        allEvents={result.events}
+        events={events}
+      />
     </EventShell>
   );
 }

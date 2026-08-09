@@ -99,9 +99,9 @@ export function NotificationPreferences() {
     },
   ];
   
-  const LumaUpdates = [{
+  const LeviClubUpdates = [{
     icon: <BrandMarkSVG />,
-    title: t("Settings.preferences.notifications.luma.updates"),
+    title: t("Settings.preferences.notifications.leviclub.updates"),
     options: [
       { name: "E-mail", value: "email" },
       { name: "Push", value: "push" },
@@ -179,15 +179,15 @@ export function NotificationPreferences() {
       </div>
       <div className="flex flex-col gap-2 mt-4">
         <span className="text-sm font-semibold text-zinc-500">
-        {t("Settings.preferences.notifications.luma.title")}
+        {t("Settings.preferences.notifications.leviclub.title")}
         </span>
         <div className="flex flex-col">
-          {LumaUpdates.map((content, index) => (
+          {LeviClubUpdates.map((content, index) => (
             <NotificationPopover
               key={index}
               content={content}
               index={index}
-              totalCount={LumaUpdates.length}
+              totalCount={LeviClubUpdates.length}
             />
           ))}
         </div>

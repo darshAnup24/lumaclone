@@ -4,7 +4,7 @@
   "current_phase": 16,
   "current_phase_name": "Vercel Deployment Readiness",
   "started_at": "2026-08-09T10:53:00+05:30",
-  "updated_at": "2026-08-09T17:26:39+05:30",
+  "updated_at": "2026-08-09T18:14:18+05:30",
   "phases": [
     {
       "id": 0,
@@ -89,15 +89,16 @@
       "id": 2,
       "name": "Authentication",
       "status": "passed",
-      "attempts": 5,
+      "attempts": 6,
       "started_at": "2026-08-09T11:43:20+05:30",
-      "completed_at": "2026-08-09T11:54:05+05:30",
+      "completed_at": "2026-08-09T18:05:25+05:30",
       "implementation_evidence": [
         "Added @supabase/ssr browser/server clients and middleware cookie refresh with environment validation.",
         "Rewired the existing Luma email screen to Supabase magic-link authentication and removed the phone/OTP-entry branches while preserving the card, inputs, buttons, spacing, and responsive behavior.",
         "Implemented Google OAuth, PKCE code exchange plus token-hash magic-link compatibility, visible safe auth errors, user metadata completion, session restoration, and Supabase logout.",
         "Protected /home, /create, /settings, and /finish-signup; migrated profile image upload to server-session identity and removed legacy client-trusted JWT/OTP/user endpoints.",
-        "Added .env.example names-only Supabase configuration, 16 auth contract tests, runtime redirect evidence, and desktop/mobile UI regression captures."
+        "Added .env.example names-only Supabase configuration, 16 auth contract tests, runtime redirect evidence, and desktop/mobile UI regression captures.",
+        "Added the protected /profile route, authenticated profile API, RLS-scoped name/bio persistence, auth-metadata username/social persistence, published hosted-event display, and Cloudinary avatar synchronization."
       ],
       "validation_evidence": [
         "Final npm run lint: PASS with seven documented non-blocking pre-existing warnings.",
@@ -109,7 +110,8 @@
         "UI regression: desktop sign-in is visually equivalent to Phase 0; desktop/mobile captures stored in .codex/campus-auth/ui-regression.",
         "Secret boundary scan: only NEXT_PUBLIC Supabase URL/anon names appear in client-reachable code; service-role value is absent and unused."
         ,
-        "Post-completion auth repair: 149 tests passed (3 live suites skipped), lint/typecheck/build passed, /verifyAccount was absent from the route build, both callback routes compiled, desktop/mobile sign-in inspection preserved the documented Luma geometry, and diff/secret checks passed."
+        "Post-completion auth repair: 149 tests passed (3 live suites skipped), lint/typecheck/build passed, /verifyAccount was absent from the route build, both callback routes compiled, desktop/mobile sign-in inspection preserved the documented Luma geometry, and diff/secret checks passed.",
+        "Profile repair focused gate: profile API/persistence and protected-route tests plus typecheck passed; final combined gate passed 159 tests with 3 opt-in live suites skipped."
       ],
       "failures": [
         "Resolved: standalone typecheck initially read stale .next types for deleted legacy auth routes.",
@@ -134,6 +136,8 @@
         "src/app/api/auth/** (removed)",
         "src/app/api/user/route.ts (removed)",
         "src/app/api/user/upload-image/route.ts",
+        "src/app/api/profile/route.ts",
+        "src/app/profile/page.tsx",
         "src/app/create/page.tsx",
         "src/app/settings/page.tsx",
         "src/components/SignIn/SignInForm.tsx",
@@ -212,16 +216,18 @@
     },
     {
       "id": 5,
-      "name": "Existing Luma Integration",
+      "name": "Existing LeviClub UI Integration",
       "status": "passed",
-      "attempts": 3,
+      "attempts": 5,
       "started_at": "2026-08-09T12:18:00+05:30",
-      "completed_at": "2026-08-09T12:27:35+05:30",
+      "completed_at": "2026-08-09T18:07:53+05:30",
       "implementation_evidence": [
         "Connected the authenticated home, discovery, calendar, and event-detail routes to the shared Supabase published-event repository through a resilient server loader.",
         "Added native Luma-styled event cards, filter chips, calendar agenda rows, detail metadata, cloud cover URL rendering, and configuration/query empty states without adding a component library or design system.",
         "Official and solo/student records share the same cards, routes, filtering, schedule grouping, and detail page; discovery extends the required category/type filter vocabulary.",
-        "Forced event-backed feeds to dynamic server rendering so cloud publications appear without a new application build, and protected all new authenticated routes in existing Supabase middleware."
+        "Forced event-backed feeds to dynamic server rendering so cloud publications appear without a new application build, and protected all new authenticated routes in existing Supabase middleware.",
+        "Rearranged Discover to the supplied compact reference hierarchy with image-led event rows, responsive two-column presentation, real category counts, remote cover imagery, and category links without changing the event data layer.",
+        "Reduced Settings to implemented profile, primary email, display, and notification surfaces; removed demo payment, phone/password/2FA, extra-email, third-party-wallet, sync, active-device, and fake account-deletion UI and code."
       ],
       "validation_evidence": [
         "Final npm test: PASS; 7 files and 48 tests, including TSX-rendered official/student cards, filters, schedule/location fallback, grouping, repository validation, and protected routes.",
@@ -229,7 +235,8 @@
         "Final npm run build: PASS; home, discovery, calendars, and event detail are dynamic routes.",
         "Runtime smoke: public routes return 200 and all new authenticated routes redirect safely to sign-in when cloud configuration/session is absent.",
         "Phase 0/current desktop homepage, mobile homepage, and sign-in screenshots were visually equivalent apart from live clock/video/ambient pixels; captures and detailed evidence are in .codex/campus-ui-regression/phase-05/validation.md.",
-        "git diff --check and service-role/credential scan: PASS; no Docker, local Supabase runtime, CI/CD, or cloud mutation was performed."
+        "git diff --check and service-role/credential scan: PASS; no Docker, local Supabase runtime, CI/CD, or cloud mutation was performed.",
+        "Discover arrangement focused tests/typecheck passed; profile/settings focused tests/typecheck passed; final 159-test, lint, typecheck, build, route smoke, public UI screenshot, diff, and secret gates passed."
       ],
       "failures": [
         "Resolved after attempt 1: Vitest OXC inherited JSX preserve and could not import the TSX event card for the render regression test.",
@@ -248,6 +255,9 @@
         "tests/auth/protected-routes.test.ts",
         "tests/events/event-card.test.ts",
         "tests/events/event-presentation.test.ts",
+        "tests/ui/discover-profile-settings.test.ts",
+        "tests/profile/profile-route.test.ts",
+        "src/components/Settings/**",
         "vitest.config.mts",
         ".codex/campus-ui-regression/phase-05/**"
       ]
@@ -589,9 +599,9 @@
       "id": 16,
       "name": "Vercel Deployment Readiness",
       "status": "passed",
-      "attempts": 3,
+      "attempts": 5,
       "started_at": "2026-08-09T16:08:00+05:30",
-      "completed_at": "2026-08-09T17:26:39+05:30",
+      "completed_at": "2026-08-09T18:14:18+05:30",
       "implementation_evidence": [
         "Replaced the placeholder README with exact architecture, student flow, setup, cloud Supabase, Resend, Groq, admin, security, live-validation, and manual Vercel deployment guidance.",
         "Completed the names-only environment template for required campus services and optional existing cloud image integrations; added a Vercel-compatible 60-second inbound route duration.",
@@ -607,9 +617,12 @@
         "Production runtime smoke: public pages 200 and protected event/admin pages 307 safely to sign-in.",
         "Detailed evidence is recorded in .codex/campus-deployment/validation.md.",
         "Post-deployment repair validation on Next.js 15.5.23: 145 tests, typecheck, lint, production build, and diff integrity PASS.",
-        "LeviClub branding/link repair: 152 tests passed with 3 opt-in live tests skipped; lint, typecheck, build, secret/diff checks, desktop runtime screenshot, and rendered root-link audit passed."
+        "LeviClub branding/link repair: 152 tests passed with 3 opt-in live tests skipped; lint, typecheck, build, secret/diff checks, desktop runtime screenshot, and rendered root-link audit passed.",
+        "Final post-UI deployment gate: 159 tests passed with 3 opt-in live suites skipped; lint passed with three inherited warnings, typecheck/build passed, /profile and /api/profile compiled dynamically, settings bundle dropped to 32.6 kB, and route/UI/secret checks passed."
       ],
-      "failures": [],
+      "failures": [
+        "Resolved after attempt 4: deployment readiness found Cloudinary configuration values in the tracked .env.example template; all example assignments were restored to names-only placeholders before revalidation. Credential rotation remains required if the secret entered Git history."
+      ],
       "files_changed": [
         "README.md",
         ".env.example",
@@ -624,6 +637,8 @@
         "src/translations/en/global.json",
         "src/translations/pt/global.json",
         "tests/ui/branding.test.ts",
+        "tests/ui/discover-profile-settings.test.ts",
+        "tests/profile/profile-route.test.ts",
         "tests/deployment/readiness.test.ts",
         ".codex/campus-deployment/validation.md"
       ]
@@ -646,7 +661,9 @@
     ,
     "User override for AI publication: relevant verified-sender items may auto-publish when confidence is missing or meets threshold; unsupported categories normalize to other. Ambiguous dates, low present confidence, unverified senders, and irrelevant content remain review/rejected safeguards.",
     "Pin Next.js and eslint-config-next to 15.5.23 after Vercel blocked the vulnerable 15.1.7 deployment; do not use the dangerous vulnerable-deployment bypass.",
-    "Use LeviClub as the visible product brand; keep the existing Luma-derived layout as the UI baseline, render the wordmark without a new image asset, and temporarily route every landing-footer link to the same-site root."
+    "Use LeviClub as the visible product brand; keep the existing Luma-derived layout as the UI baseline, render the wordmark without a new image asset, and temporarily route every landing-footer link to the same-site root.",
+    "Use existing event cover_image_url values for Discover/category imagery without downloading files; use the configured server-side Cloudinary integration only for authenticated profile avatar uploads.",
+    "Keep only implemented, requirement-backed Settings surfaces: profile, authenticated primary email, display, and notifications. Remove demo payment and unsupported account-management surfaces with their corresponding code."
   ],
   "validation_history": [
     {
@@ -907,7 +924,42 @@
       "timestamp": "2026-08-09T17:26:39+05:30",
       "result": "PASS",
       "evidence": "Visible branding and metadata changed to LeviClub without new image assets; all landing-footer links resolve to / on the deployment host. 152 tests, lint, typecheck, production build, desktop runtime inspection, root-link audit, diff integrity, and secret scan passed."
+    },
+    {
+      "phase": 5,
+      "attempt": 4,
+      "timestamp": "2026-08-09T18:03:06+05:30",
+      "result": "PASS",
+      "evidence": "Discover was rearranged into compact image-led event rows and category cards using unified event data and remote cover URLs; focused event tests and typecheck passed after repairing an EventCategory type import."
+    },
+    {
+      "phase": 2,
+      "attempt": 6,
+      "timestamp": "2026-08-09T18:05:25+05:30",
+      "result": "PASS",
+      "evidence": "Protected /profile, authenticated profile persistence, hosted events, and Cloudinary avatar synchronization compiled; profile and protected-route focused gates passed."
+    },
+    {
+      "phase": 5,
+      "attempt": 5,
+      "timestamp": "2026-08-09T18:07:53+05:30",
+      "result": "PASS",
+      "evidence": "Settings retained only persistent profile, primary email, display, and notification UI; demo payment and unsupported account sections plus code/copy were removed. Twenty-two focused tests and typecheck passed."
+    },
+    {
+      "phase": 16,
+      "attempt": 4,
+      "timestamp": "2026-08-09T18:08:11+05:30",
+      "result": "FAIL",
+      "evidence": "Deployment readiness names-only template test detected populated Cloudinary values in .env.example; validation stopped and the phase did not advance until placeholders were restored."
+    },
+    {
+      "phase": 16,
+      "attempt": 5,
+      "timestamp": "2026-08-09T18:14:18+05:30",
+      "result": "PASS",
+      "evidence": "After restoring names-only environment placeholders, 159 tests passed with 3 opt-in live suites skipped; lint, typecheck, production build, protected-route smoke, public UI screenshot comparison, diff integrity, and credential scan passed."
     }
   ],
-  "last_summary": "All required phases 0-16 remain passed. The visible product brand is now LeviClub across landing/auth/settings copy and route metadata, using a native text wordmark with no new downloaded image. Every link in the landing footer resolves to /, which stays on https://lumaclone-fawn.vercel.app/ in production. The Google OAuth and emailed Supabase magic-link flow remains intact. Final gates: 152 tests passed with 3 opt-in live suites skipped, lint, typecheck, production build, desktop UI inspection, rendered link audit, diff integrity, and secret scan passed."
+  "last_summary": "All required phases 0-16 remain passed. Discover now follows the supplied compact reference arrangement with remote event/category imagery and unchanged unified event behavior. /profile exists with hosted events, persistent RLS-backed profile data, auth metadata, and server-side Cloudinary avatar uploads. Settings now contains only persistent profile, primary email, display, and notification surfaces; payment and unsupported demo account code were removed. The initially failed names-only environment-template gate was repaired before revalidation. Final gates: 159 tests passed with 3 opt-in live suites skipped, lint, typecheck, production build, protected-route smoke, public UI inspection, diff integrity, and secret scan passed."
 }

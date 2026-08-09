@@ -1,8 +1,9 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "../../ui/input";
-import { Textarea } from "../../ui/textarea";
 import {
   BsInstagram,
   BsLinkedin,
@@ -10,263 +11,223 @@ import {
   BsTwitterX,
   BsYoutube,
 } from "react-icons/bs";
-import { Globe, UserCheck2 } from "lucide-react";
-import { UserImageUploadInput } from "./UserImageUploadInput";
+import { Loader2, UserCheck2 } from "lucide-react";
+import toast, { Toaster } from "react-hot-toast";
 import { Button } from "../../ui/button";
-import { useTranslation } from "react-i18next";
-import toast, { Toaster } from "react-hot-toast"
-import { ToastTypes } from "@/components/ToastTypes";
+import { Input } from "../../ui/input";
+import { Textarea } from "../../ui/textarea";
+import { UserImageUploadInput } from "./UserImageUploadInput";
 
-const UserFormSchema = z.object({
-  name: z.string().nonempty({
-    message: "O campo nome não pode ficar vazio",
-  }),
-  username: z.string().nonempty({
-    message: "O campo nome de usuário não pode ficar vazio",
-  }),
-  bio: z.string().optional(),
+const profileSchema = z.object({
+  name: z.string().trim().min(1, "Enter your name.").max(120),
+  username: z
+    .string()
+    .trim()
+    .min(3, "Use at least three characters.")
+    .max(40)
+    .regex(
+      /^[a-zA-Z0-9._-]+$/,
+      "Use letters, numbers, dots, dashes, or underscores.",
+    ),
+  bio: z.string().trim().max(500).default(""),
   social: z.object({
-    instagram: z.string().optional(),
-    youtube: z.string().optional(),
-    linkedin: z.string().optional(),
-    twitter: z.string().optional(),
-    tiktok: z.string().optional(),
-    website: z.string().optional()
+    instagram: z.string().max(100).default(""),
+    twitter: z.string().max(100).default(""),
+    youtube: z.string().max(100).default(""),
+    tiktok: z.string().max(100).default(""),
+    linkedin: z.string().max(160).default(""),
   }),
 });
 
-type UserForm = z.infer<typeof UserFormSchema>;
+type ProfileForm = z.infer<typeof profileSchema>;
+
+const defaultValues: ProfileForm = {
+  name: "",
+  username: "",
+  bio: "",
+  social: {
+    instagram: "",
+    twitter: "",
+    youtube: "",
+    tiktok: "",
+    linkedin: "",
+  },
+};
+
+const inputClass =
+  "border-zinc-300 text-zinc-950 transition hover:border-zinc-600 focus-visible:border-zinc-950 dark:border-zinc-700 dark:text-zinc-50 dark:hover:border-zinc-400 dark:focus-visible:border-zinc-50";
 
 export function AccountSettingsForm() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<UserForm>({
-    resolver: zodResolver(UserFormSchema),
+  } = useForm<ProfileForm>({
+    defaultValues,
+    resolver: zodResolver(profileSchema),
   });
 
-  async function onSubmit(data: UserForm) {
-    toast("Teste", ToastTypes.default);
-    console.log(data);
+  useEffect(() => {
+    fetch("/api/profile")
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Unable to load your profile.");
+        return response.json() as Promise<ProfileForm>;
+      })
+      .then((profile) => reset(profile))
+      .catch((error) =>
+        toast.error(error instanceof Error ? error.message : "Unable to load your profile."),
+      )
+      .finally(() => setIsLoading(false));
+  }, [reset]);
+
+  async function onSubmit(data: ProfileForm) {
+    try {
+      setIsSaving(true);
+      const response = await fetch("/api/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const result = (await response.json()) as { message?: string };
+      if (!response.ok) throw new Error(result.message ?? "Unable to save your profile.");
+      toast.success("Profile saved.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unable to save your profile.");
+    } finally {
+      setIsSaving(false);
+    }
   }
 
-  const { t } = useTranslation();
-
   return (
-    <div className="flex flex-col gap-2 mt-5">
-      <h1 className="text-2xl font-semibold text-zinc-950 dark:text-zinc-50">{t("Settings.account.profile.title")}</h1>
-      <span className="text-md text-zinc-700 dark:text-zinc-300">
-        {t("Settings.account.profile.subtitle")}
-      </span>
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:space-x-8">
-          <div className="flex flex-col gap-2 row-start-2 sm:row-start-1">
-            <div className="flex flex-col gap-2">
-              <label
-                htmlFor="name"
-                className="text-zinc-700 dark:text-zinc-300 font-semibold text-sm"
-              >
-                {t("Settings.account.profile.name")}
-              </label>
-              <Input
-                type="text"
-                id="name"
-                {...register("name")}
-                className="transition focus-visible:border-zinc-50 hover:border-zinc-700 border-zinc-300 text-zinc-950 
-                dark:hover:border-zinc-400  dark:focus-visible:border-zinc-50 dark:border-zinc-700 dark:text-zinc-50"
-              />
-              {errors.name && (
-                <span className="text-red-500 text-xs">
-                  {errors.name.message}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col gap-2">
-              <label
-                htmlFor="username"
-                className="dark:text-zinc-300 text-zinc-700 font-semibold text-sm"
-              >
-                {t("Settings.account.profile.username")}
-              </label>
-              <div className="flex items-center">
-                <div className="dark:text-zinc-300 text-zinc-700 font-semibold text-sm px-4 flex my-auto h-full 
-                dark:bg-zinc-800 bg-zinc-200 border border-r-0 dark:border-zinc-700 border-zinc-300 rounded-l-lg">
-                  <span className="my-auto">@</span>
-                </div>
-                <Input
-                  type="text"
-                  id="username"
-                  {...register("username")}
-                  className="transition dark:hover:border-zinc-400 dark:focus-visible:border-zinc-50 dark:border-zinc-700 dark:text-zinc-50 
-                  hover:border-zinc-600 focus-visible:border-zinc-950 border-zinc-300 text-zinc-950
-                  rounded-l-none"
-                />
-              </div>
-              {errors.username && (
-                <span className="text-red-500 text-xs">
-                  {errors.username.message}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col gap-2">
-              <label
-                htmlFor="bio"
-                className="dark:text-zinc-300 text-zinc-700 font-semibold text-sm"
-              >
-                Bio
-              </label>
-              <Textarea
-                maxLength={140}
-                id="bio"
-                {...register("bio")}
-                className="transition hover:border-zinc-600 focus-visible:border-zinc-950 border-zinc-300 text-zinc-950
-                          dark:hover:border-zinc-400 dark:focus-visible:border-zinc-50 dark:border-zinc-700 dark:text-zinc-50
-                            text-wrap placeholder:font-semibold placeholder:text-base
-                            min-h-[5rem] rounded-lg"
-                placeholder={t("Settings.account.profile.bioPlaceholder")}
-              />
-              {errors.bio && (
-                <span className="text-red-500 text-xs">
-                  {errors.bio.message}
-                </span>
-              )}
-            </div>
-          </div>
-          <UserImageUploadInput />
+    <div className="mt-5 flex flex-col gap-2">
+      <Toaster position="bottom-center" />
+      <h1 className="text-2xl font-semibold text-zinc-950 dark:text-zinc-50">
+        Your Profile
+      </h1>
+      <p className="text-zinc-700 dark:text-zinc-300">
+        Choose how you will be displayed as a host or guest.
+      </p>
+
+      {isLoading ? (
+        <div className="flex min-h-52 items-center justify-center">
+          <Loader2 className="size-5 animate-spin text-zinc-500" />
         </div>
-        <div className="flex flex-col gap-2 mt-5">
-          <label htmlFor="bio" className="text-zinc-700 dark:text-zinc-300 font-semibold text-sm">
-          {t("Settings.account.profile.socialLinks")}
-          </label>
-          <div className="grid grid-cols-1 sm:grid-cols-2 sm:grid-rows-3 gap-4 w-fit">
-            <div className="flex items-center gap-3">
-              <BsInstagram size={17} className="text-zinc-500" />
-              <div className="flex items-center max-w-[17rem] h-[2.3rem]">
-                <div className="text-zinc-700 bg-zinc-200 border-zinc-300
-                dark:text-zinc-300 dark:bg-zinc-800 dark:border-zinc-700
-                font-semibold text-md px-3 flex my-auto h-full border border-r-0 rounded-l-lg">
-                  <span className="my-auto">instagram.com/</span>
+      ) : (
+        <form className="mt-3" onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-[1fr_auto] sm:gap-12">
+            <div className="order-2 flex flex-col gap-4 sm:order-1">
+              <Field label="Name" error={errors.name?.message}>
+                <Input className={inputClass} id="name" {...register("name")} />
+              </Field>
+              <Field label="Username" error={errors.username?.message}>
+                <div className="flex items-center">
+                  <span className="flex h-10 items-center rounded-l-lg border border-r-0 border-zinc-300 bg-zinc-200 px-3 text-sm font-semibold text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                    @
+                  </span>
+                  <Input
+                    className={`${inputClass} rounded-l-none`}
+                    id="username"
+                    {...register("username")}
+                  />
                 </div>
-                <Input
-                  type="text"
-                  id="instagram"
-                  {...register("social.instagram")}
-                  placeholder={t("Settings.account.profile.socialLinksPlaceholder.username")}
-                  className="transition 
-                  dark:hover:border-zinc-400 dark:focus-visible:border-zinc-50 dark:border-zinc-700 dark:text-zinc-50 
-                  hover:border-zinc-600 focus-visible:border-zinc-950 border-zinc-300 text-zinc-950 
-                  placeholder:text-base placeholder:font-semibold h-full rounded-l-none"
+              </Field>
+              <Field label="Bio" error={errors.bio?.message}>
+                <Textarea
+                  className={`${inputClass} min-h-24 rounded-lg`}
+                  id="bio"
+                  maxLength={500}
+                  placeholder="Share a bit about your interests, work, or hobbies."
+                  {...register("bio")}
                 />
-              </div>
+              </Field>
             </div>
-            <div className="flex items-center gap-3">
-              <BsTwitterX size={17} className="text-zinc-500" />
-              <div className="flex items-center max-w-[17rem] h-[2.3rem]">
-                <div className="text-zinc-700 bg-zinc-200 border-zinc-300
-                dark:text-zinc-300 dark:bg-zinc-800 dark:border-zinc-700
-                font-semibold text-md px-3 flex my-auto h-full border border-r-0 rounded-l-lg">
-                  <span className="my-auto">x.com/</span>
-                </div>
-                <Input
-                  type="text"
-                  id="twitter"
-                  {...register("social.twitter")}
-                  placeholder={t("Settings.account.profile.socialLinksPlaceholder.username")}
-                  className="transition 
-                  dark:hover:border-zinc-400 dark:focus-visible:border-zinc-50 dark:border-zinc-700 dark:text-zinc-50 
-                  hover:border-zinc-600 focus-visible:border-zinc-950 border-zinc-300 text-zinc-950 
-                  placeholder:text-base placeholder:font-semibold h-full rounded-l-none"
-                />
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <BsYoutube size={17} className="text-zinc-500" />
-              <div className="flex items-center max-w-[17rem] h-[2.3rem]">
-                <div className="text-zinc-700 bg-zinc-200 border-zinc-300
-                dark:text-zinc-300 dark:bg-zinc-800 dark:border-zinc-700
-                font-semibold text-md px-3 flex my-auto h-full border border-r-0 rounded-l-lg">
-                  <span className="my-auto">youtube.com/@</span>
-                </div>
-                <Input
-                  type="text"
-                  id="youtube"
-                  {...register("social.youtube")}
-                  placeholder={t("Settings.account.profile.socialLinksPlaceholder.username")}
-                  className="transition 
-                  dark:hover:border-zinc-400 dark:focus-visible:border-zinc-50 dark:border-zinc-700 dark:text-zinc-50 
-                  hover:border-zinc-600 focus-visible:border-zinc-950 border-zinc-300 text-zinc-950 
-                  placeholder:text-base placeholder:font-semibold h-full rounded-l-none"
-                />
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <BsTiktok size={17} className="text-zinc-500" />
-              <div className="flex items-center max-w-[17rem] h-[2.3rem]">
-                <div className="text-zinc-700 bg-zinc-200 border-zinc-300
-                dark:text-zinc-300 dark:bg-zinc-800 dark:border-zinc-700
-                font-semibold text-md px-3 flex my-auto h-full border border-r-0 rounded-l-lg">
-                  <span className="my-auto">tiktok.com/@</span>
-                </div>
-                <Input
-                  type="text"
-                  id="tiktok"
-                  {...register("social.tiktok")}
-                  placeholder={t("Settings.account.profile.socialLinksPlaceholder.username")}
-                  className="transition 
-                  dark:hover:border-zinc-400 dark:focus-visible:border-zinc-50 dark:border-zinc-700 dark:text-zinc-50 
-                  hover:border-zinc-600 focus-visible:border-zinc-950 border-zinc-300 text-zinc-950 
-                  placeholder:text-base placeholder:font-semibold h-full rounded-l-none"
-                />
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <BsLinkedin size={17} className="text-zinc-500" />
-              <div className="flex items-center max-w-[17rem] h-[2.3rem]">
-                <div className="text-zinc-700 bg-zinc-200 border-zinc-300
-                dark:text-zinc-300 dark:bg-zinc-800 dark:border-zinc-700
-                font-semibold text-md px-3 flex my-auto h-full border border-r-0 rounded-l-lg">
-                  <span className="my-auto">linkedin.com</span>
-                </div>
-                <Input
-                  type="text"
-                  id="linkedin"
-                  {...register("social.linkedin")}
-                  placeholder={t("Settings.account.profile.socialLinksPlaceholder.linkedin")}
-                  className="transition 
-                  dark:hover:border-zinc-400 dark:focus-visible:border-zinc-50 dark:border-zinc-700 dark:text-zinc-50 
-                  hover:border-zinc-600 focus-visible:border-zinc-950 border-zinc-300 text-zinc-950 
-                  placeholder:text-base placeholder:font-semibold h-full rounded-l-none"
-                />
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Globe size={17} className="text-zinc-500" />
-              <div className="flex items-center h-[2.3rem] w-full max-w-[17rem]">
-                <Input
-                  type="text"
-                  id="website"
-                  {...register("social.website")}
-                  placeholder={t("Settings.account.profile.socialLinksPlaceholder.website")}
-                  className="transition 
-                  dark:hover:border-zinc-400 dark:focus-visible:border-zinc-50 dark:border-zinc-700 dark:text-zinc-50 
-                  hover:border-zinc-600 focus-visible:border-zinc-950 border-zinc-300 text-zinc-950 
-                  placeholder:text-base placeholder:font-semibold h-full"
-                />
-              </div>
+            <div className="order-1 sm:order-2">
+              <UserImageUploadInput />
             </div>
           </div>
-          <Button className="mt-5 w-fit
-          dark:bg-zinc-50 dark:hover:bg-zinc-300 
-          bg-zinc-950 hover:bg-zinc-700 " >
-            <UserCheck2 size={20} className="dark:text-zinc-800 text-zinc-200" />
-            <span className="dark:text-zinc-800 text-zinc-200 font-medium text-base">
-            {t("Settings.account.profile.save")}
+
+          <div className="mt-7 border-t border-zinc-200 pt-7 dark:border-zinc-800">
+            <h2 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+              Social Links
+            </h2>
+            <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <SocialField icon={<BsInstagram />} prefix="instagram.com/">
+                <Input className={inputClass} {...register("social.instagram")} />
+              </SocialField>
+              <SocialField icon={<BsTwitterX />} prefix="x.com/">
+                <Input className={inputClass} {...register("social.twitter")} />
+              </SocialField>
+              <SocialField icon={<BsYoutube />} prefix="youtube.com/@">
+                <Input className={inputClass} {...register("social.youtube")} />
+              </SocialField>
+              <SocialField icon={<BsTiktok />} prefix="tiktok.com/@">
+                <Input className={inputClass} {...register("social.tiktok")} />
+              </SocialField>
+              <SocialField icon={<BsLinkedin />} prefix="linkedin.com">
+                <Input className={inputClass} {...register("social.linkedin")} />
+              </SocialField>
+            </div>
+          </div>
+
+          <Button
+            className="mt-6 bg-zinc-950 hover:bg-zinc-700 dark:bg-zinc-50 dark:hover:bg-zinc-300"
+            disabled={isSaving}
+            type="submit"
+          >
+            {isSaving ? (
+              <Loader2 className="size-5 animate-spin dark:text-zinc-800" />
+            ) : (
+              <UserCheck2 className="size-5 dark:text-zinc-800" />
+            )}
+            <span className="font-medium text-zinc-100 dark:text-zinc-800">
+              Save Changes
             </span>
           </Button>
-          <Toaster position="bottom-center" />
-        </div>
-      </form>
+        </form>
+      )}
     </div>
+  );
+}
+
+function Field({
+  children,
+  error,
+  label,
+}: {
+  children: React.ReactNode;
+  error?: string;
+  label: string;
+}) {
+  return (
+    <label className="flex flex-col gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+      {label}
+      {children}
+      {error ? <span className="text-xs text-red-500">{error}</span> : null}
+    </label>
+  );
+}
+
+function SocialField({
+  children,
+  icon,
+  prefix,
+}: {
+  children: React.ReactNode;
+  icon: React.ReactNode;
+  prefix: string;
+}) {
+  return (
+    <label className="flex min-w-0 items-center gap-3">
+      <span className="text-zinc-500">{icon}</span>
+      <span className="flex min-w-0 flex-1 items-center">
+        <span className="flex h-10 shrink-0 items-center rounded-l-lg border border-r-0 border-zinc-300 bg-zinc-200 px-3 text-sm font-semibold text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+          {prefix}
+        </span>
+        <span className="min-w-0 flex-1 [&>input]:rounded-l-none">{children}</span>
+      </span>
+    </label>
   );
 }

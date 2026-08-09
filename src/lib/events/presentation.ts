@@ -7,6 +7,7 @@ export const discoveryFilters = [
   ["hackathon", "Hackathons"],
   ["conference", "Conferences"],
   ["workshop", "Workshops"],
+  ["seminar", "Seminars"],
   ["competition", "Competitions"],
   ["club_activity", "Club Activities"],
   ["career_placement", "Career / Placement"],
@@ -14,6 +15,8 @@ export const discoveryFilters = [
   ["sports", "Sports"],
   ["study", "Study"],
   ["networking", "Networking"],
+  ["cultural", "Cultural"],
+  ["other", "Other"],
 ] as const;
 
 export type DiscoveryFilter = (typeof discoveryFilters)[number][0];

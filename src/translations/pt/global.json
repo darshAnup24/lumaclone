@@ -6,7 +6,6 @@
     "homeAuthenticated": "Início ∙ LeviClub",
     "accountSettings": "Configurações da Conta ∙ LeviClub",
     "preferencesSettings": "Preferências ∙ LeviClub",
-    "paymentSettings": "Configurações de Pagamento ∙ LeviClub",
     "createEvent": "Criar Evento ∙ LeviClub"
   },
   "Header": {
@@ -54,125 +53,7 @@
     "title": "Configurações",
     "tabs": {
       "account": "Conta",
-      "preferences": "Preferências",
-      "payment": "Pagamento"
-    },
-    "account": {
-      "profile": {
-        "title": "Seu perfil",
-        "subtitle": "Escolha como você será exibido como anfitrião ou convidado.",
-        "name": "Nome",
-        "username": "Nome de usuário",
-        "bioPlaceholder": "Compartilhe um pouco sobre seu histórico e interesses",
-        "socialLinks": "Links sociais",
-        "socialLinksPlaceholder": {
-          "username": "nome de usuário",
-          "linkedin": "/in/identificador",
-          "website": "Seu site"
-        },
-        "save": "Salvar Alterações"
-      },
-      "emails": {
-        "title": "Emails",
-        "subtitle": "Adicione emails adicionais para receber convites de eventos enviados para esses endereços.",
-        "addEmail": {
-          "button": "Adicionar Email",
-          "title": "Adicionar Email",
-          "subtitle": "Adicione um email adicional para receber convites de eventos enviados para esse endereço.",
-          "label": "Endereço de Email",
-          "placeholder": "voce@email.com",
-          "add": "Adicionar Email"
-        },
-        "main": "Principal",
-        "mainEmailObservation": "Este e-mail será compartilhado com os anfitriões quando você se registrar para os eventos deles.",
-        "emailObservation": "Convites enviados para este email serão vinculados à sua conta LeviClub.",
-        "tooltip": "Ações",
-        "changeEmail": {
-          "button": "Alterar Email",
-          "title": "Alterar Email",
-          "subtitle": "Altere seu endereço de email principal do LeviClub. Este email é compartilhado com os anfitriões quando você se inscreve em seus eventos.",
-          "label": "Novo Endereço de Email",
-          "placeholder": "voce@email.com",
-          "update": "Atualizar"
-        },
-        "removeEmail": {
-          "button": "Remover Email",
-          "title": "Remover Email",
-          "subtitleP1": "Tem certeza de que deseja remover ",
-          "subtitleP2": " da sua conta?",
-          "cancel": "Cancelar",
-          "remove": "Remover"
-        },
-        "promoteToMain": "Promover para Principal"
-      },
-      "Phone": {
-        "title": "Número de Telefone",
-        "subtitle": "Gerencie o número de telefone que você usa para entrar no LeviClub e receber atualizações por SMS.",
-        "label": "Telefone",
-        "phonePlaceholder": "+55 11 96123 4567",
-        "securityObservation": "Para sua segurança, enviaremos um código para verificar qualquer alteração no seu número de telefone.",
-        "update": "Atualizar",
-        "tooltip": "Vínculo de número de telefone desativado por conta de custos do uso (observação feita pelo desenvolvedor)."
-      },
-      "PasswordAndSecurity": {
-        "title": "Senha e Segurança",
-        "subtitle": "Proteja sua conta com senha e autenticação de dois fatores.",
-        "accountPassword": "Senha da Conta",
-        "definePassword": "Definir senha",
-        "changePassword": "Alterar senha",
-        "passwordObservation": "Por favor, defina uma senha antes de ativar a autenticação de dois fatores.",
-        "passwordObservationWithEmailSent": "Por favor, siga as instruções no email para finalizar a configuração da sua senha.",
-        "twoFactorAuth": "Autenticação de Dois Fatores",
-        "twoFactorAuthObservation": "Adicione uma camada extra de segurança à sua conta com a autenticação de dois fatores.",
-        "activate2FA": "Ativar 2FA"
-      },
-      "ThirdpartyAccounts": {
-        "title": "Contas de Terceiros",
-        "subtitle": "Vincule suas contas para entrar no LeviClub e automatizar seus fluxos de trabalho.",
-        "connectedAccount": "Vinculado",
-        "notConnectedAccount": "Não vinculado"
-      },
-      "AccountSync": {
-        "title": "Sincronização de Conta",
-        "calendarSync": "Sincronização de Calendário",
-        "calendarSyncObservation": "Sincronize o seu calendário da LeviClub com o Google, Outlook ou Apple.",
-        "addiCalSubscription": {
-          "button": "Adicionar assinatura iCal",
-          "title": "Adicionar Assinatura iCal",
-          "subtitle": "Adicione o feed de eventos ao seu aplicativo de calendário para acompanhar novos eventos e atualizações.",
-          "GoogleAgenda": "Google Agenda",
-          "OutlookCalendar": "Calendário do Outlook",
-          "SystemCalendar": "Calendário do Sistema",
-          "CopyURL": "Copiar URL para a área de transferência"
-        },
-        "syncAccountObservation": "Sincronize sua conta LeviClub com outras plataformas para automatizar seus fluxos de trabalho.",
-        "googleSync": "Sincronizar Contatos com o Google",
-        "googleSyncObservation": "Sincronize seus contatos do Gmail para convidá-los facilmente para seus eventos.",
-        "activateGoogleSync": "Ativar Sincronização"
-      },
-      "ActiveDevices": {
-        "title": "Dispositivos Ativos",
-        "subtitle": "Veja a lista de dispositivos nos quais você está atualmente conectado ao LeviClub.",
-        "thisDevice": "Este Dispositivo",
-        "removeDevice": {
-          "title": "Sair do Dispositivo",
-          "subtitle": "Você deseja sair deste dispositivo e removê-lo da lista?",
-          "cancel": "Cancelar",
-          "exit": "Sair"
-        }
-      },
-      "DeleteAccount": {
-        "title": "Excluir Conta",
-        "subtitle": "Se você não deseja mais usar o LeviClub, pode excluir sua conta permanentemente.",
-        "delete": {
-          "button": "Excluir Minha Conta",
-          "title": "Excluir Conta",
-          "subtitle": "Tem certeza de que deseja excluir a conta vinculada a ",
-          "checkbox": "Eu entendo que não poderei recuperar minha conta.",
-          "cancel": "Cancelar",
-          "delete": "Excluir"
-        }
-      }
+      "preferences": "Preferências"
     },
     "preferences": {
       "exhibition": {
@@ -206,10 +87,6 @@
           "newMembers": "Novos Membros",
           "eventSubmissions": "Submissões de Eventos"
         },
-        "luma": {
-          "title": "LeviClub",
-          "updates": "Atualizações do Produto"
-        },
         "yourSubscriptions": {
           "title": "Suas Assinaturas",
           "discoverPages": "Páginas de Descoberta do LeviClub",
@@ -232,39 +109,10 @@
             "subtitle": "Você não tem assinaturas de calendário ativas."
           },
           "discover": "Descobrir Eventos"
-        }
-      }
-    },
-    "payment": {
-      "methods": {
-        "title": "Formas de Pagamento",
-        "description": "Seus métodos de pagamento salvos são criptografados e armazenados com segurança pela Stripe.",
-        "addCard": {
-          "toast": "Essa demo não permite adicionar uma forma de pagamento",
-          "button": "Adicionar Cartão",
-          "title": "Adicionar cartão",
-          "description": "Adicione um cartão para comprar ingressos rapidamente ou pagar pelo LeviClub Plus. Suas informações são criptografadas e processadas com segurança pelo Stripe.",
-          "placeholder": "Número do Cartão"
-        }
-      },
-      "lumaPlus": {
-        "title": "LeviClub Plus",
-        "description": "Aproveite 0% de taxas da plataforma, limites maiores de convites e administração, suporte prioritário e mais.",
-        "learnMore": "Saiba mais",
-        "span": "LeviClub Plus se aplica ao nível do calendário. Escolha o calendário desejado acima para gerenciar sua assinatura do LeviClub Plus.",
-        "calendarSection": {
-          "noCalendars": {
-            "title": "Sem Calendários",
-            "subtitle": "Você não tem calendários. Para se inscrever no LeviClub Plus, primeiro ",
-            "subtitleLink": "crie um calendário"
-          }
-        }
-      },
-      "history": {
-        "title": "Histórico de Pagamentos",
-        "noPayments": {
-          "title": "Sem Pagamentos",
-          "subtitle": "Seus pagamentos aparecerão aqui. Para visualizar os pagamentos do LeviClub Plus, selecione o calendário correspondente na seção acima."
+        },
+        "leviclub": {
+          "title": "LeviClub",
+          "updates": "Atualizações do Produto"
         }
       }
     }

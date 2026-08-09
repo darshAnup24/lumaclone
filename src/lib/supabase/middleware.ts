@@ -6,6 +6,7 @@ const protectedPrefixes = [
   "/home",
   "/create",
   "/settings",
+  "/profile",
   "/finish-signup",
   "/calendars",
   "/discover",

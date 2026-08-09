@@ -2,19 +2,10 @@
 import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { AccountSettingsForm } from "./account/AccountSettingsForm";
-import { EmailsList } from "./account/EmailSection/EmailsList";
-import { PhoneSection } from "./account/PhoneSection";
-import { SecuritySection } from "./account/SecuritySection";
-import { ThirdpartyAccounts } from "./account/ThirdpartyAccounts";
-import { AccountSync } from "./account/AccountSync/AccountSync";
-import { ActiveDevices } from "./account/ActiveDevices/ActiveDevices";
-import { DeleteAccount } from "./account/DeleteAccount";
+import { PrimaryEmailSection } from "./account/PrimaryEmailSection";
 import { ExibitionSettings } from "./preferences/Exibition";
 import { NotificationPreferences } from "./preferences/Notification/NotificationPreferences";
 import { useTranslation } from "react-i18next";
-import PaymentMethods from "./payment/PaymentMethods/PaymentMethods";
-import LumaPlus from "./payment/LumaPlus/LumaPlus";
-import PaymentHistory from "./payment/PaymentHistory/PaymentHistory";
 
 export function SettingsForm() {
   const [isSticky, setSticky] = useState(false);
@@ -36,9 +27,6 @@ export function SettingsForm() {
         break;
       case "preferences":
         document.title = t("titles.preferencesSettings");
-        break;
-      case "payment":
-        document.title = t("titles.paymentSettings");
         break;
     }
     return setActiveTab(tab);
@@ -81,17 +69,6 @@ export function SettingsForm() {
                 >
                 {t("Settings.tabs.preferences")}
               </TabsTrigger>
-              <TabsTrigger
-                value="payment"
-                className="dark:text-zinc-400 text-zinc-700 text-md font-medium 
-                dark:data-[state=active]:text-zinc-50 dark:data-[state=active]:border-zinc-50 dark:hover:text-zinc-200 
-                data-[state=active]:text-zinc-950 data-[state=active]:border-b-2 data-[state=active]:border-zinc-950 hover:text-zinc-700 
-                transition-border-opacity
-                px-0 rounded-none data-[state=active]:bg-transparent"
-                onClick={() => handleChangeTab("payment")}
-              >
-                {t("Settings.tabs.payment")}
-              </TabsTrigger>
             </TabsList>
           </div>
           <hr className="dark:border-zinc-800 border-zinc-200 w-full" />
@@ -99,22 +76,11 @@ export function SettingsForm() {
         <div className="container mx-auto lg:max-w-[1000px] flex gap-5 px-3 md:px-1 lg:px-0">
           <TabsContent value="account" className="w-full">
             <AccountSettingsForm />
-            <EmailsList />
-            <PhoneSection />
-            <SecuritySection />
-            <ThirdpartyAccounts />
-            <AccountSync />
-            <ActiveDevices />
-            <DeleteAccount />
+            <PrimaryEmailSection />
           </TabsContent>
           <TabsContent value="preferences">
             <ExibitionSettings />
             <NotificationPreferences />
-          </TabsContent>
-          <TabsContent value="payment" className="w-full">
-            <PaymentMethods />
-            <LumaPlus />
-            <PaymentHistory />
           </TabsContent>
         </div>
       </Tabs>

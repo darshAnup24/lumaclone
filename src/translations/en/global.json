@@ -6,7 +6,6 @@
     "homeAuthenticated": "Home ∙ LeviClub",
     "accountSettings": "Account Settings ∙ LeviClub",
     "preferencesSettings": "Preferences ∙ LeviClub",
-    "paymentSettings": "Payment Settings ∙ LeviClub",
     "createEvent": "Create event ∙ LeviClub"
   },
   "Header": {
@@ -54,125 +53,7 @@
     "title": "Settings",
     "tabs": {
       "account": "Account",
-      "preferences": "Preferences",
-      "payment": "Payment"
-    },
-    "account": {
-      "profile": {
-        "title": "Your Profile",
-        "subtitle": "Choose how you will be displayed as a host or guest.",
-        "name": "Name",
-        "username": "Username",
-        "bioPlaceholder": "Share a bit about your interests, work, or hobbies.",
-        "socialLinks": "Social Links",
-        "socialLinksPlaceholder": {
-          "username": "username",
-          "linkedin": "/in/identifier",
-          "website": "Your website"
-        },
-        "save": "Save Changes"
-      },
-      "emails": {
-        "title": "Emails",
-        "subtitle": "Add additional emails to receive event invitations sent to these addresses.",
-        "addEmail": {
-          "button": "Add Email",
-          "title": "Add Email",
-          "subtitle": "Add an additional email to receive event invitations sent to this address.",
-          "label": "Email Address",
-          "placeholder": "you@email.com",
-          "add": "Add Email"
-        },
-        "main": "Main",
-        "mainEmailObservation": "This email will be shared with hosts when you register for their events.",
-        "emailObservation": "Invitations sent to this email will be linked to your LeviClub account.",
-        "tooltip": "Actions",
-        "changeEmail": {
-          "button": "Change Email",
-          "title": "Change Email",
-          "subtitle": "Change your primary LeviClub email address. This email is shared with hosts when you register for their events.",
-          "label": "New Email Address",
-          "placeholder": "you@email.com",
-          "update": "Update"
-        },
-        "removeEmail": {
-          "button": "Remove Email",
-          "title": "Remove Email",
-          "subtitleP1": "Are you sure you want to remove ",
-          "subtitleP2": " from your account?",
-          "cancel": "Cancel",
-          "remove": "Remove"
-        },
-        "promoteToMain": "Promote to Main"
-      },
-      "Phone": {
-        "title": "Phone Number",
-        "subtitle": "Manage the phone number you use to sign in to LeviClub and receive SMS updates.",
-        "label": "Phone",
-        "phonePlaceholder": "+1 123 456 7890",
-        "securityObservation": "For your security, we will send a code to verify any changes to your phone number.",
-        "update": "Update",
-        "tooltip": "Phone number linking disabled due to usage costs (note made by developer)."
-      },
-      "PasswordAndSecurity": {
-        "title": "Password and Security",
-        "subtitle": "Protect your account with a password and two-factor authentication.",
-        "accountPassword": "Account Password",
-        "definePassword": "Set Password",
-        "changePassword": "Change Password",
-        "passwordObservation": "Please set a password before enabling two-factor authentication.",
-        "passwordObservationWithEmailSent": "Please follow the instructions in the email to complete your password setup.",
-        "twoFactorAuth": "Two-Factor Authentication",
-        "twoFactorAuthObservation": "Add an extra layer of security to your account with two-factor authentication.",
-        "activate2FA": "Activate 2FA"
-      },
-      "ThirdpartyAccounts": {
-        "title": "Third-Party Accounts",
-        "subtitle": "Link your accounts to sign in to LeviClub and automate your workflows.",
-        "connectedAccount": "Connected",
-        "notConnectedAccount": "Not Connected"
-      },
-      "AccountSync": {
-        "title": "Account Sync",
-        "calendarSync": "Calendar Sync",
-        "calendarSyncObservation": "Sync your LeviClub calendar with Google, Outlook, or Apple.",
-        "addiCalSubscription": {
-          "button": "Add iCal Subscription",
-          "title": "Add iCal Subscription",
-          "subtitle": "Add the event feed to your calendar app to keep track of new events and updates.",
-          "GoogleAgenda": "Google Calendar",
-          "OutlookCalendar": "Outlook Calendar",
-          "SystemCalendar": "System Calendar",
-          "CopyURL": "Copy URL to Clipboard"
-        },
-        "syncAccountObservation": "Sync your LeviClub account with other platforms to automate your workflows.",
-        "googleSync": "Sync Contacts with Google",
-        "googleSyncObservation": "Sync your Gmail contacts to easily invite them to your events.",
-        "activateGoogleSync": "Activate Sync"
-      },
-      "ActiveDevices": {
-        "title": "Active Devices",
-        "subtitle": "View the list of devices you are currently signed in to LeviClub on.",
-        "thisDevice": "This Device",
-        "removeDevice": {
-          "title": "Sign Out from Device",
-          "subtitle": "Do you want to sign out from this device and remove it from the list?",
-          "cancel": "Cancel",
-          "exit": "Sign Out"
-        }
-      },
-      "DeleteAccount": {
-        "title": "Delete Account",
-        "subtitle": "If you no longer wish to use LeviClub, you can permanently delete your account.",
-        "delete": {
-          "button": "Delete My Account",
-          "title": "Delete Account",
-          "subtitle": "Are you sure you want to delete the account linked to ",
-          "checkbox": "I understand that I will not be able to recover my account.",
-          "cancel": "Cancel",
-          "delete": "Delete"
-        }
-      }
+      "preferences": "Preferences"
     },
     "preferences": {
       "exhibition": {
@@ -206,10 +87,6 @@
           "newMembers": "New Members",
           "eventSubmissions": "Event Submissions"
         },
-        "luma": {
-          "title": "LeviClub",
-          "updates": "Product Updates"
-        },
         "yourSubscriptions": {
           "title": "Your Subscriptions",
           "discoverPages": "LeviClub Discover Pages",
@@ -232,39 +109,10 @@
             "subtitle": "You are not subscribed to any calendars yet."
           },
           "discover": "Discover Events"
-        }
-      }
-    },
-    "payment": {
-      "methods": {
-        "title": "Payment Methods",
-        "description": "Add or remove payment methods to pay for event tickets and subscriptions.",
-        "addCard": {
-          "toast": "This demo does not support adding a payment method",
-          "button": "Add Card",
-          "title": "Add Card",
-          "description": "Add a card to quickly buy tickets or pay for LeviClub Plus. Your information is encrypted and securely processed by Stripe.",
-          "placeholder": "Card Number"
-        }
-      },
-      "lumaPlus": {
-        "title": "LeviClub Plus",
-        "description": "Enjoy 0% platform fees, higher invite and admin limits, priority support, and more.",
-        "learnMore": "Learn more",
-        "span": "LeviClub Plus applies on the calendar level. Choose the desired calendar above to manage its LeviClub Plus membership.",
-        "calendarSection": {
-          "noCalendars": {
-            "title": "No Calendars",
-            "subtitle": "You have no calendars. To sign up for LeviClub Plus, please first ",
-            "subtitleLink": "create a calendar"
-          }
-        }
-      },
-      "history": {
-        "title": "Payment History",
-        "noPayments": {
-          "title": "No Payments",
-          "subtitle": "Your payments will appear here. To view LeviClub Plus payments, select the corresponding calendar from the section above."
+        },
+        "leviclub": {
+          "title": "LeviClub",
+          "updates": "Product Updates"
         }
       }
     }

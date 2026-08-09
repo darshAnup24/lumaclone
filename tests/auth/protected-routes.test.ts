@@ -8,6 +8,7 @@ describe("protected route policy", () => {
     "/create",
     "/settings",
     "/settings/account",
+    "/profile",
     "/finish-signup",
     "/calendars",
     "/discover",

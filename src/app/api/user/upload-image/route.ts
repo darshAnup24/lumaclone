@@ -49,10 +49,11 @@ export async function POST(req: Request) {
     });
     if (updateError) throw updateError;
 
-    console.log({
-        userId: user.id,
-        secure_url,
-    });
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .update({ avatar_url: secure_url })
+      .eq("id", user.id);
+    if (profileError) throw profileError;
 
     return NextResponse.json({ url: secure_url }, { status: 200 });
   } catch (err: unknown) {
