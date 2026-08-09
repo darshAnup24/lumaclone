@@ -2,6 +2,49 @@
 
 Campus LeviClub preserves the existing LeviClub clone interface and adds one campus activity system for official events extracted from institutional email and student-created activities.
 
+<div style="border:2px solid #e11d48;border-radius:12px;padding:14px 18px;margin:18px 0 22px;background:#fff1f2;color:#881337;">
+
+**<span style="color:#e11d48;font-size:1.05em;">NEW FEATURE — Events created automatically from email</span>**
+
+Campus LeviClub now turns ordinary club emails into published events. A club (or a judge testing the platform) sends one email to the platform inbox and the event appears on the events page — no manual entry.
+
+**Why this stands out:**
+
+- **Zero manual entry** — clubs keep sending normal emails; there is nothing to fill in.
+- **LLM-classified** — title, dates, category, venue, and confidence are extracted automatically by the AI model.
+- **Instant publish** — high-confidence events go live immediately, with no sender restriction.
+- **Fits the existing Luma UI** — the event shows up on Home, Discover, Calendars, and the event detail page with its category cover image.
+
+</div>
+
+## Demo for judges: email an event, watch it publish
+
+1. **Sign in** to the deployed platform (Google or email magic link).
+2. **Send an event email** to the platform inbox at `events@moreusul.resend.app`.
+
+**The pipeline in brief:**
+
+```text
+Your email → Resend webhook (email.received)
+  → raw email stored in Supabase
+  → Groq LLM extracts a structured event (title, dates, category, venue, confidence)
+  → confidence >= 0.75 → auto-published
+  → event appears in Home / Discover / Calendars
+```
+
+3. Use the button below to open a new email to `events@moreusul.resend.app`:
+
+<div align="left">
+<a href="mailto:events@moreusul.resend.app?subject=Tech%20Club%20Workshop&amp;body=Tech%20Club%20Workshop%0A%0AWe%20are%20organizing%20a%20workshop%20on%20Web%20Development.%0A%0ADate%3A%20August%2015%2C%202026%0ATime%3A%2010%3A00%20AM%20to%201%3A00%20PM%0AVenue%3A%20RVCE%20campus%2C%20Block%20B">
+<button type="button" style="background:#111827;color:#ffffff;border:none;border-radius:8px;padding:12px 18px;font-size:16px;font-weight:600;cursor:pointer;">Compose test event email → events@moreusul.resend.app</button>
+</a>
+</div>
+
+4. **Type your own event details** in the email body — a clear title, date and time, venue, and a short description (the prefilled example is a safe starting point).
+5. **Send it.** Within seconds the webhook fires and the LLM classifies your email.
+6. **Open the Events page** on the platform and see your event updated automatically. Low-confidence or unclear-date emails go to the admin review queue instead of publishing.
+
+
 ## Architecture
 
 ```text
@@ -16,7 +59,7 @@ Institutional email
   → existing LeviClub event and calendar UI
 ```
 
-Automatic publication follows the configured policy: a relevant email from a verified sender is published when confidence is absent or meets `AI_AUTO_PUBLISH_THRESHOLD`. Low-confidence, ambiguous, unverified, and likely-update records stay in `/admin/review`. Unsupported AI category labels normalize to `other`; legacy `unknown` records must be categorized by an admin before publication.
+Automatic publication follows the configured policy: a relevant email is published when confidence is absent or meets `AI_AUTO_PUBLISH_THRESHOLD` and the date is unambiguous. Ambiguous-date, low-confidence, and likely-update records stay in `/admin/review`. Unsupported AI category labels normalize to `other`; legacy `unknown` records must be categorized by an admin before publication.
 
 ## Student events
 
@@ -112,7 +155,7 @@ Admin status is read from `profiles.role` on the server and enforced again by da
    `https://YOUR_DOMAIN/api/webhooks/resend`
 
 5. Copy its signing secret into `RESEND_WEBHOOK_SECRET` and the API key into `RESEND_API_KEY`.
-6. Add exact approved sender addresses to `organizations.email_patterns` in Supabase. Unknown senders never become verified automatically.
+6. Add exact approved sender addresses to `organizations.email_patterns` in Supabase. Matching senders get their events linked to the organization; publication itself is confidence-based, so unknown senders still publish when the extraction is confident.
 
 The webhook verifies the timestamped HMAC signature before fetching content, preserves raw text/HTML and attachment metadata, and is idempotent on Resend message ID. Attachment metadata is stored in Supabase; no image attachment is downloaded into this repository.
 
