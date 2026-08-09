@@ -65,19 +65,19 @@ describe("strict campus email extraction", () => {
     const extraction = normalizeExtraction({ ...base, category: "robot_battle", confidence: undefined });
     expect(extraction.category).toBe("other");
     expect(extraction.confidence).toBeNull();
-    expect(extractionPublicationStatus(extraction, true)).toBe("published");
+    expect(extractionPublicationStatus(extraction)).toBe("published");
     expect(normalizeExtraction({ ...base, category: "Hackathon" }).category).toBe("hackathon");
     expect(normalizeExtraction({ ...base, category: "Career / Placement" }).category).toBe("career_placement");
   });
 
-  it("reviews low confidence, ambiguous dates, and unverified senders", () => {
-    expect(extractionPublicationStatus(normalizeExtraction({ ...base, confidence: 0.2 }), true)).toBe("pending_review");
-    expect(extractionPublicationStatus(normalizeExtraction({ ...base, date_ambiguous: true }), true)).toBe("pending_review");
-    expect(extractionPublicationStatus(normalizeExtraction(base), false)).toBe("pending_review");
+  it("reviews low confidence and ambiguous dates", () => {
+    expect(extractionPublicationStatus(normalizeExtraction({ ...base, confidence: 0.2 }))).toBe("pending_review");
+    expect(extractionPublicationStatus(normalizeExtraction({ ...base, date_ambiguous: true }))).toBe("pending_review");
+    expect(extractionPublicationStatus(normalizeExtraction({ ...base, confidence: 0.9 }))).toBe("published");
   });
 
   it("never publishes irrelevant content and rejects malformed structured output", () => {
-    expect(extractionPublicationStatus(normalizeExtraction({ ...base, is_relevant: false }), true)).toBe("rejected");
+    expect(extractionPublicationStatus(normalizeExtraction({ ...base, is_relevant: false }))).toBe("rejected");
     expect(() => normalizeExtraction({ ...base, start_time: "tomorrow evening" })).toThrow();
   });
 });

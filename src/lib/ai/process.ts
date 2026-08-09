@@ -19,7 +19,7 @@ export async function processInboundEmail(messageId: string) {
     }
     await admin.from("inbound_emails").update({ processing_status: "processing", error_message: null }).eq("id", email.id);
     const extraction = await extractEvent({ subject: email.subject, text: email.text_body, html: email.html_body, receivedAt: email.received_at });
-    const initialStatus = extractionPublicationStatus(extraction, Boolean(email.organization_id));
+    const initialStatus = extractionPublicationStatus(extraction);
     let finalStatus = initialStatus;
     let eventId: string | null = null;
     if (extraction.is_relevant) {
