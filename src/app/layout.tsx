@@ -1,4 +1,5 @@
 import { Providers } from "./providers";
+import { DemoGuideModal } from "@/components/DemoGuide/DemoGuideModal";
 import "./globals.css";
 
 export default function RootLayout({
@@ -13,6 +14,7 @@ export default function RootLayout({
         >
           <Providers>
             {children}
+            <DemoGuideModal />
           </Providers>
       </body>
     </html>
