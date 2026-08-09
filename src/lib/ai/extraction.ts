@@ -52,7 +52,48 @@ export function normalizeExtraction(input: Record<string, unknown>) {
   const category = (eventCategories as readonly string[]).includes(normalized)
     ? normalized
     : "other";
-  return extractedEventSchema.parse({ ...input, category, confidence: input.confidence ?? null });
+
+  const sanitized: Record<string, unknown> = {
+    ...input,
+    category,
+    confidence: input.confidence ?? null,
+  };
+
+  const timestampFields = ["start_time", "end_time", "registration_deadline"] as const;
+  const timestampParser = z.string().datetime({ offset: true });
+  for (const field of timestampFields) {
+    const value = sanitized[field];
+    if (value == null) continue;
+    if (typeof value !== "string" || !timestampParser.safeParse(value).success) {
+      sanitized[field] = null;
+    }
+  }
+
+  const urlFields = ["meeting_url", "registration_url"] as const;
+  for (const field of urlFields) {
+    const value = sanitized[field];
+    if (value == null) continue;
+    const validUrl =
+      typeof value === "string" &&
+      (() => {
+        try {
+          return ["http:", "https:"].includes(new URL(value).protocol);
+        } catch {
+          return false;
+        }
+      })();
+    if (!validUrl) sanitized[field] = null;
+  }
+
+  const parsed = extractedEventSchema.parse(sanitized);
+  if (!parsed.start_time) {
+    return {
+      ...parsed,
+      date_ambiguous: true,
+      ambiguity_reason: parsed.ambiguity_reason ?? "No start time extracted",
+    };
+  }
+  return parsed;
 }
 
 export function extractionPublicationStatus(

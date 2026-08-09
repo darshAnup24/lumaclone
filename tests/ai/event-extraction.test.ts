@@ -76,8 +76,25 @@ describe("strict campus email extraction", () => {
     expect(extractionPublicationStatus(normalizeExtraction({ ...base, confidence: 0.9 }))).toBe("published");
   });
 
-  it("never publishes irrelevant content and rejects malformed structured output", () => {
+  it("never publishes irrelevant content and treats malformed dates as ambiguous", () => {
     expect(extractionPublicationStatus(normalizeExtraction({ ...base, is_relevant: false }))).toBe("rejected");
-    expect(() => normalizeExtraction({ ...base, start_time: "tomorrow evening" })).toThrow();
+    const malformed = normalizeExtraction({ ...base, start_time: "tomorrow evening" });
+    expect(malformed.start_time).toBeNull();
+    expect(malformed.date_ambiguous).toBe(true);
+    expect(extractionPublicationStatus(malformed)).toBe("pending_review");
+  });
+
+  it("nulls invalid deadline and URL values instead of failing", () => {
+    const extraction = normalizeExtraction({
+      ...base,
+      registration_deadline: "August 30, 2026",
+      registration_url: "register here",
+      meeting_url: "N/A",
+    });
+    expect(extraction.registration_deadline).toBeNull();
+    expect(extraction.registration_url).toBeNull();
+    expect(extraction.meeting_url).toBeNull();
+    expect(extraction.start_time).toBe("2026-08-14T17:00:00+05:30");
+    expect(extractionPublicationStatus(extraction)).toBe("published");
   });
 });
