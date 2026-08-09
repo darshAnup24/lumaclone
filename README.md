@@ -1,4 +1,4 @@
-# Campus LeviClub
+# Campus LeviClub 🤠️
 
 Campus LeviClub preserves the existing LeviClub clone interface and adds one campus activity system for official events extracted from institutional email and student-created activities.
 
@@ -6,9 +6,9 @@ Campus LeviClub preserves the existing LeviClub clone interface and adds one cam
 
 **<span style="color:#e11d48;font-size:1.05em;">NEW FEATURE — Events created automatically from email</span>**
 
-Campus LeviClub now turns ordinary club emails into published events. A club (or a judge testing the platform) sends one email to the platform inbox and the event appears on the events page — no manual entry.
+🥶️🥶️ Campus LeviClub now turns ordinary club emails into published events. A club (or a judge testing the platform) sends one email to the platform inbox and the event appears on the events page — no manual entry.🫨️🫨️
 
-**Why this stands out:**
+**Why this stands out:**🫀️❗️⭕️❗️❗️⭕️❗️❗️⭕️❗️❗️⭕️❗️❗️⭕️❗️❗️⭕️❗️❗️⭕️❗️❗️⭕️❗️❗️⭕️❗️❗️⭕️❗️❗️⭕️❗️❗️⭕️❗️❗️⭕️❗️❗️⭕️❗️❗️⭕️❗️
 
 - **Zero manual entry** — clubs keep sending normal emails; there is nothing to fill in.
 - **LLM-classified** — title, dates, category, venue, and confidence are extracted automatically by the AI model.
