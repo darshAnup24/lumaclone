@@ -19,8 +19,7 @@ export async function processInboundEmail(messageId: string) {
     }
     await admin.from("inbound_emails").update({ processing_status: "processing", error_message: null }).eq("id", email.id);
     const extraction = await extractEvent({ subject: email.subject, text: email.text_body, html: email.html_body, receivedAt: email.received_at });
-    const initialStatus = extractionPublicationStatus(extraction);
-    let finalStatus = initialStatus;
+    const finalStatus = extractionPublicationStatus(extraction);
     let eventId: string | null = null;
     if (extraction.is_relevant) {
       const duplicate = await findDuplicateCandidate(admin, email, extraction);
@@ -32,8 +31,7 @@ export async function processInboundEmail(messageId: string) {
         }).eq("id", email.id);
         return { status: "duplicate" as const, eventId: duplicate.candidate.id };
       }
-      const status = duplicate.kind === "possible_update" ? "pending_review" : initialStatus;
-      finalStatus = status;
+      const status = finalStatus;
       const { data: event, error: eventError } = await admin.from("events").insert({
         title: extraction.title, description: extraction.description, event_type: "official", source: "email",
         content_type: extraction.content_type, category: extraction.category, organization_id: email.organization_id,
@@ -41,14 +39,14 @@ export async function processInboundEmail(messageId: string) {
         timezone: extraction.timezone, location_type: extraction.location_type, location: extraction.location,
         meeting_url: extraction.meeting_url, capacity: extraction.capacity, registration_url: extraction.registration_url,
         registration_deadline: extraction.registration_deadline, status, requires_approval: false,
-        confidence_score: extraction.confidence, possible_duplicate: duplicate.kind === "possible_update",
-        proposed_update_for_event_id: duplicate.candidate?.id ?? null,
+        confidence_score: extraction.confidence, possible_duplicate: false,
+        proposed_update_for_event_id: null,
         published_at: status === "published" ? new Date().toISOString() : null,
       }).select("id").single();
       if (eventError) throw eventError;
       eventId = event.id;
     }
-    await admin.from("inbound_emails").update({ extraction_result: extraction, processing_status: finalStatus === "published" && eventId ? "published" : finalStatus === "rejected" ? "extracted" : "needs_review" }).eq("id", email.id);
+    await admin.from("inbound_emails").update({ extraction_result: extraction, processing_status: finalStatus === "rejected" ? "extracted" : "published" }).eq("id", email.id);
     return { status: finalStatus, eventId };
   } catch (error) {
     const message = error instanceof Error ? error.message : "AI extraction failed";

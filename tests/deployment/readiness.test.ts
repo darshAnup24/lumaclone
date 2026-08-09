@@ -10,7 +10,7 @@ const webhook = read("src/app/api/webhooks/resend/route.ts");
 const requiredVariables = [
   "NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY", "SUPABASE_SERVICE_ROLE_KEY",
   "RESEND_API_KEY", "RESEND_FROM_EMAIL", "RESEND_WEBHOOK_SECRET",
-  "AI_PROVIDER", "GROQ_API_KEY", "GROQ_MODEL", "AI_AUTO_PUBLISH_THRESHOLD",
+  "AI_PROVIDER", "GROQ_API_KEY", "GROQ_MODEL",
 ];
 
 describe("deployment readiness", () => {

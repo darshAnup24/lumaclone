@@ -42,7 +42,7 @@ Your email → Resend webhook (email.received)
 
 4. **Type your own event details** in the email body — a clear title, date and time, venue, and a short description (the prefilled example is a safe starting point).
 5. **Send it.** Within seconds the webhook fires and the LLM classifies your email.
-6. **Open the Events page** on the platform and see your event updated automatically. Low-confidence or unclear-date emails go to the admin review queue instead of publishing.
+6. **Open the Events page** on the platform and see your event updated automatically. Every relevant email publishes immediately — emails without a usable date still publish and display "Date to be announced".
 
 
 ## Architecture
@@ -54,12 +54,12 @@ Institutional email
   → raw inbound email in Supabase
   → Groq structured event extraction
   → duplicate/update detection
-  → automatic publication or admin review
+  → automatic publication
   → unified Supabase events table
   → existing LeviClub event and calendar UI
 ```
 
-Automatic publication follows the configured policy: a relevant email is published when confidence is absent or meets `AI_AUTO_PUBLISH_THRESHOLD` and the date is unambiguous. Ambiguous-date, low-confidence, and likely-update records stay in `/admin/review`. Unsupported AI category labels normalize to `other`; legacy `unknown` records must be categorized by an admin before publication.
+Every relevant email publishes automatically — there is no admin review gate. Missing dates, low confidence, and likely-update emails still publish; events without a start date display "Date to be announced". Exact duplicate reminders are suppressed. Irrelevant content is rejected. Unsupported AI category labels normalize to `other`.
 
 ## Student events
 
@@ -109,7 +109,6 @@ Required for the campus application:
 | `AI_PROVIDER` | Server only | Use `groq` for the configured integration |
 | `GROQ_API_KEY` | Server only | Groq API key |
 | `GROQ_MODEL` | Server only | Tested with `openai/gpt-oss-120b` |
-| `AI_AUTO_PUBLISH_THRESHOLD` | Server only | Confidence threshold, normally `0.75` |
 
 `OPENAI_API_KEY` and `AI_MODEL` are optional alternatives when `AI_PROVIDER=openai`. `CLOUDINARY_*` and `UNSPLASH_ACCESS_KEY` are optional legacy LeviClub image integrations; event covers remain cloud URLs and are not downloaded into the repository.
 
@@ -166,10 +165,9 @@ The default provider is Groq:
 ```dotenv
 AI_PROVIDER=groq
 GROQ_MODEL=openai/gpt-oss-120b
-AI_AUTO_PUBLISH_THRESHOLD=0.75
 ```
 
-The server requests strict structured JSON and validates it with Zod before writing an event. Dates use the email receipt time as context and default campus timezone `Asia/Kolkata`. The admin page at `/admin/review` can edit extraction fields, publish/reject uncertain records, and resolve likely updates with Apply Update, Create New, or Reject. Applying an update preserves the existing event ID and records old/new snapshots.
+The server requests strict structured JSON and validates it with Zod before writing an event. Dates use the email receipt time as context and default campus timezone `Asia/Kolkata`. Malformed date and URL values are nulled instead of failing the extraction, and every relevant email publishes immediately; the event displays "Date to be announced" when no date was present.
 
 Optional live checks (they create uniquely tagged cloud rows and clean them up):
 

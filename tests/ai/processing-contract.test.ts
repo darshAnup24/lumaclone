@@ -19,11 +19,12 @@ describe("AI extraction persistence contract", () => {
     expect(processor).toContain("return { status: \"failed\" as const");
   });
 
-  it("suppresses exact repeats and turns likely updates into review proposals", () => {
+  it("suppresses exact repeats but publishes everything else", () => {
     expect(processor).toContain("alreadyProcessed");
     expect(processor).toContain('duplicate.kind === "exact"');
     expect(processor).toContain('return { status: "duplicate" as const');
-    expect(processor).toContain('duplicate.kind === "possible_update" ? "pending_review"');
-    expect(processor).toContain("proposed_update_for_event_id: duplicate.candidate?.id");
+    expect(processor).not.toContain('duplicate.kind === "possible_update" ? "pending_review"');
+    expect(processor).not.toContain('proposed_update_for_event_id: duplicate.candidate?.id');
+    expect(processor).toContain("proposed_update_for_event_id: null");
   });
 });

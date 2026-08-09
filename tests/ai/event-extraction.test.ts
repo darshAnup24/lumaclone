@@ -70,18 +70,18 @@ describe("strict campus email extraction", () => {
     expect(normalizeExtraction({ ...base, category: "Career / Placement" }).category).toBe("career_placement");
   });
 
-  it("reviews low confidence and ambiguous dates", () => {
-    expect(extractionPublicationStatus(normalizeExtraction({ ...base, confidence: 0.2 }))).toBe("pending_review");
-    expect(extractionPublicationStatus(normalizeExtraction({ ...base, date_ambiguous: true }))).toBe("pending_review");
+  it("publishes relevant content regardless of confidence or date ambiguity", () => {
+    expect(extractionPublicationStatus(normalizeExtraction({ ...base, confidence: 0.2 }))).toBe("published");
+    expect(extractionPublicationStatus(normalizeExtraction({ ...base, date_ambiguous: true }))).toBe("published");
     expect(extractionPublicationStatus(normalizeExtraction({ ...base, confidence: 0.9 }))).toBe("published");
   });
 
-  it("never publishes irrelevant content and treats malformed dates as ambiguous", () => {
+  it("never publishes irrelevant content and publishes ambiguous dates as announced", () => {
     expect(extractionPublicationStatus(normalizeExtraction({ ...base, is_relevant: false }))).toBe("rejected");
     const malformed = normalizeExtraction({ ...base, start_time: "tomorrow evening" });
     expect(malformed.start_time).toBeNull();
     expect(malformed.date_ambiguous).toBe(true);
-    expect(extractionPublicationStatus(malformed)).toBe("pending_review");
+    expect(extractionPublicationStatus(malformed)).toBe("published");
   });
 
   it("nulls invalid deadline and URL values instead of failing", () => {

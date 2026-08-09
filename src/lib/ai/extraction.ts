@@ -98,12 +98,9 @@ export function normalizeExtraction(input: Record<string, unknown>) {
 
 export function extractionPublicationStatus(
   extraction: ExtractedEvent,
-  threshold = Number(process.env.AI_AUTO_PUBLISH_THRESHOLD ?? "0.75"),
 ) {
   if (!extraction.is_relevant) return "rejected" as const;
-  if (extraction.date_ambiguous) return "pending_review" as const;
-  if (extraction.confidence === null || extraction.confidence >= threshold) return "published" as const;
-  return "pending_review" as const;
+  return "published" as const;
 }
 
 export const extractionJsonSchema = {
