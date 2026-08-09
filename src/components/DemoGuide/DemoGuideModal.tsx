@@ -2,7 +2,7 @@
 
 import { Mail, Send } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { getBrowserUser } from "@/lib/auth/browser";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 const INBOX = "events@moreusul.resend.app";
 
@@ -28,13 +29,47 @@ const DISMISSED_KEY = "campus_demo_guide_dismissed";
 export function DemoGuideModal() {
   const [open, setOpen] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
+  const shownThisAuth = useRef(false);
 
   useEffect(() => {
-    if (localStorage.getItem(DISMISSED_KEY)) return;
+    let mounted = true;
+
     getBrowserUser()
-      .then((user) => setSignedIn(Boolean(user)))
-      .catch(() => setSignedIn(false))
-      .finally(() => setOpen(true));
+      .then((user) => {
+        if (!mounted) return;
+        if (user) {
+          setSignedIn(true);
+          shownThisAuth.current = true;
+        } else if (!localStorage.getItem(DISMISSED_KEY)) {
+          setOpen(true);
+        }
+      })
+      .catch(() => {
+        if (mounted && !localStorage.getItem(DISMISSED_KEY)) setOpen(true);
+      });
+
+    const {
+      data: { subscription },
+    } = getSupabaseBrowserClient().auth.onAuthStateChange((event) => {
+      if (!mounted) return;
+      if (event === "SIGNED_IN") {
+        setSignedIn(true);
+        if (!shownThisAuth.current) {
+          shownThisAuth.current = true;
+          setOpen(true);
+        }
+      } else if (event === "SIGNED_OUT") {
+        shownThisAuth.current = false;
+        localStorage.removeItem(DISMISSED_KEY);
+        setSignedIn(false);
+        setOpen(false);
+      }
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const dismiss = () => {
