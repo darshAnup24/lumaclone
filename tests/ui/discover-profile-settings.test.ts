@@ -51,6 +51,7 @@ describe("Discover, profile, and Settings UI contracts", () => {
 
     expect(html).toContain("Popular Events");
     expect(html).toContain("Browse by Category");
+    expect(html).toContain("Newly Added");
     expect(html).toContain("/events/" + event.id);
     expect(html).toContain("/discover?filter=hackathon");
     expect(html).toContain("res.cloudinary.com");

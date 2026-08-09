@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { categoryCoverImages, eventCoverUrl } from "@/lib/events/cover";
+import { EventCard } from "./EventCard";
 import type { EventRecord } from "@/lib/events/schema";
 import {
   discoveryFilters,
@@ -63,6 +64,13 @@ export function DiscoverExperience({
   unavailable,
 }: DiscoverExperienceProps) {
   const popularEvents = events.slice(0, 6);
+  const recentEvents = [...events]
+    .sort(
+      (a, b) =>
+        new Date(b.published_at ?? b.created_at).getTime() -
+        new Date(a.published_at ?? a.created_at).getTime(),
+    )
+    .slice(0, 6);
   const activeLabel =
     discoveryFilters.find(([value]) => value === activeFilter)?.[1] ?? "Popular";
 
@@ -110,6 +118,37 @@ export function DiscoverExperience({
             configured={configured}
             unavailable={unavailable}
           />
+        )}
+      </section>
+
+      <section
+        aria-labelledby="newly-added-events"
+        className="mt-8 border-t border-zinc-200 pt-8 dark:border-zinc-800"
+      >
+        <div className="mb-4 flex items-end justify-between gap-4">
+          <div>
+            <h2
+              className="text-xl font-semibold text-zinc-950 dark:text-zinc-50"
+              id="newly-added-events"
+            >
+              Newly Added
+            </h2>
+            <p className="mt-0.5 text-lg text-zinc-500">
+              The latest campus events, published from email and organizers
+            </p>
+          </div>
+        </div>
+
+        {recentEvents.length ? (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {recentEvents.map((event) => (
+              <EventCard event={event} key={event.id} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-zinc-500">
+            No new events yet. Check back soon.
+          </p>
         )}
       </section>
 
