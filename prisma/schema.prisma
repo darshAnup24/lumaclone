@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id                        String                      @id @default(cuid())
+  username                  String?                     @unique
+  name                      String?
+  bio                       String?
+  socialInstagram           String?
+  socialTwitter             String?
+  socialYoutube             String?
+  socialLinkedin            String?
+  socialWebsite             String?
+  socialTiktok              String?
+  phone                     String?
+  password                  String?                     @default("")
+  verified                  Boolean                     @default(false)
+  createdAt                 DateTime                    @default(now())
+  updatedAt                 DateTime                    @updatedAt
+  imageUrl                  String?
+  Calendar                  Calendar[]
+  otpCodes                  OTPCodes[]
+  UserCalendarSubscriptions UserCalendarSubscriptions[]
+  userCards                 UserCards[]
+  userEmails                UserEmails[]
+  UserPageSubscriptions     UserPageSubscriptions[]
+  userPreferences           UserPreferences[]
+}
+
+model Calendar {
+  id                        String                      @id @default(cuid())
+  name                      String
+  description               String?                     @db.VarChar(140)
+  tone                      String                      @default("#A337B9")
+  url                       String
+  location                  CalendarLocationEnum
+  locationCity              String?
+  createdAt                 DateTime                    @default(now())
+  updatedAt                 DateTime                    @updatedAt
+  creatorId                 String
+  User                      User                        @relation(fields: [creatorId], references: [id])
+  UserCalendarSubscriptions UserCalendarSubscriptions[]
+}
+
+model UserEmails {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  userId    String
+  main      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model UserPreferences {
+  id                        String                     @id @default(cuid())
+  userId                    String
+  language                  String                     @default("pt-br")
+  participant_invite        UserNotificationMethodEnum @default(EMAIL)
+  participant_reminder      UserNotificationMethodEnum @default(EMAIL)
+  participant_transmission  UserNotificationMethodEnum @default(EMAIL)
+  participant_updates       UserNotificationMethodEnum @default(EMAIL)
+  participant_feedback      UserNotificationMethodEnum @default(EMAIL)
+  host_guest_registration   UserNotificationMethodEnum @default(EMAIL)
+  host_feedback_answer      UserNotificationMethodEnum @default(EMAIL)
+  calendar_new_members      UserNotificationMethodEnum @default(EMAIL)
+  calendar_event_submission UserNotificationMethodEnum @default(EMAIL)
+  luma_product_updates      UserNotificationMethodEnum @default(EMAIL)
+  createdAt                 DateTime                   @default(now())
+  updatedAt                 DateTime                   @updatedAt
+  User                      User                       @relation(fields: [userId], references: [id])
+}
+
+model UserPageSubscriptions {
+  id                String       @id @default(cuid())
+  userPreferencesId String
+  category          CategoryEnum
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  userId            String
+  User              User         @relation(fields: [userId], references: [id])
+}
+
+model UserCalendarSubscriptions {
+  id                String   @id @default(cuid())
+  userPreferencesId String
+  calendarId        String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  userId            String
+  Calendar          Calendar @relation(fields: [calendarId], references: [id])
+  User              User     @relation(fields: [userId], references: [id])
+}
+
+model UserCards {
+  id            String   @id @default(cuid())
+  userId        String
+  cardEncrypted String
+  main          Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  User          User     @relation(fields: [userId], references: [id])
+}
+
+model OTPCodes {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+enum CalendarLocationEnum {
+  City
+  Global
+}
+
+enum UserNotificationMethodEnum {
+  EMAIL
+  SMS
+}
+
+enum CategoryEnum {
+  IA
+  ART
+  CLIMATE
+  FITNESS
+  WELLBEIGN
+  CRIPTO
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: Campus Implementation Orchestrator
+  short_description: Phase, validate, repair, and advance a large campus-platform implementation.
+  default_prompt: Execute the Campus Luma implementation one validated phase at a time.

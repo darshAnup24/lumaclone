@@ -1,0 +1,655 @@
+{
+  "project": "Campus Luma Clone + Campus Email Event Intelligence",
+  "status": "in_progress",
+  "current_phase": 11,
+  "current_phase_name": "Resend Inbound Email",
+  "started_at": "2026-08-09T10:53:00+05:30",
+  "updated_at": "2026-08-09T13:48:28+05:30",
+  "phases": [
+    {
+      "id": 0,
+      "name": "Baseline Snapshot",
+      "status": "passed",
+      "attempts": 1,
+      "started_at": "2026-08-09T10:53:00+05:30",
+      "completed_at": "2026-08-09T10:58:06+05:30",
+      "implementation_evidence": [
+        "Installed the supplied project-scoped orchestrator at .agents/skills/campus-implementation-orchestrator, added the minimal root AGENTS.md rules, and repaired the supplied helper scripts to resolve their canonical colocated state file.",
+        "Created all five required .codex/campus-baseline documents from repository inspection.",
+        "Captured current desktop homepage, mobile homepage, and desktop sign-in screenshots with headless Chrome and preserved the existing image.png reference."
+      ],
+      "validation_evidence": [
+        "npm run dev: PASS; Next.js 15.1.7 Turbopack ready in about one second.",
+        "HTTP smoke check: /, /home, /signin, /finish-signup, /verifyAccount, /create, and /settings all returned 200.",
+        "npm run build: documented pre-existing FAIL at Next route export validation for DecryptToken in src/app/api/auth/generate-token/route.ts.",
+        "npx tsc --noEmit: documented pre-existing FAIL from cmdk nested React types in src/components/ui/command.tsx.",
+        "npm run lint: documented pre-existing unusable interactive ESLint setup prompt; no test script or tests exist.",
+        "Phase 0 validator: PASS; baseline files and screenshots exist, app status and failures are recorded, no feature/UI edits were made, and secret-value scan returned no matches."
+      ],
+      "failures": [],
+      "files_changed": [
+        "AGENTS.md",
+        ".agents/skills/campus-implementation-orchestrator/**",
+        ".codex/campus-baseline/routes.md",
+        ".codex/campus-baseline/components.md",
+        ".codex/campus-baseline/architecture.md",
+        ".codex/campus-baseline/commands.md",
+        ".codex/campus-baseline/ui-invariants.md",
+        ".codex/campus-baseline/screenshots/**"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Repository Audit",
+      "status": "passed",
+      "attempts": 2,
+      "started_at": "2026-08-09T10:58:06+05:30",
+      "completed_at": "2026-08-09T11:41:45+05:30",
+      "implementation_evidence": [
+        "Created .codex/campus-audit/implementation-map.md covering every master-requirement product area with existing and planned repository locations.",
+        "Created the complete 0-16 phase dependency map, integration/validation plan, and explicit assumptions/security-risk register.",
+        "Removed a hardcoded SMTP credential from the OTP route in favor of existing server environment variables; credential revocation remains required because Git history may retain it.",
+        "Restored objective gates by moving token helpers out of a Next route, aligning React 18 type packages, adding Next ESLint configuration, and removing existing dead/unsafe lint defects without changing rendered output."
+      ],
+      "validation_evidence": [
+        "Attempt 1 FAIL: npm run build and npm run lint reported existing ESLint errors; concurrent standalone typecheck was invalidated by .next regeneration.",
+        "Attempt 2 npm run lint: PASS with existing non-blocking hook and no-img warnings.",
+        "Attempt 2 npm run build: PASS; all 18 static/dynamic routes generated and production traces completed.",
+        "Attempt 2 npx tsc --noEmit: PASS when run sequentially after build.",
+        "Development UI/route gate: PASS; seven existing pages returned HTTP 200 and desktop/mobile homepage plus sign-in captures remained visually equivalent to Phase 0.",
+        "Phase 1 validator: PASS; audit topology, requirement coverage, all phase dependencies, secret-literal scan, JSON validity, and git diff integrity passed. No automated tests exist yet."
+      ],
+      "failures": [
+        "Resolved after attempt 1: unsupported token-helper exports in a Next route blocked production build.",
+        "Resolved after attempt 1: React 19 root types conflicted with the React 18 runtime/cmdk nested types.",
+        "Resolved after attempt 1: missing ESLint configuration and existing dead-code/unsafe-any violations blocked lint/build."
+      ],
+      "files_changed": [
+        ".codex/campus-audit/**",
+        ".eslintrc.json",
+        "package.json",
+        "package-lock.json",
+        "src/lib/auth/token.ts",
+        "src/app/api/auth/generate-token/route.ts",
+        "src/app/api/auth/send-otp/route.ts",
+        "src/app/api/auth/validate-token/route.ts",
+        "src/app/api/user/route.ts",
+        "src/app/api/user/upload-image/route.ts",
+        "src/app/create/page.tsx",
+        "src/components/Calendars/CreateCalendar.tsx",
+        "src/components/CreateEvent/**",
+        "src/components/Header.tsx",
+        "src/components/LumaLogo.tsx",
+        "src/components/Settings/**",
+        "src/components/SignIn/OtpLogin.tsx",
+        "src/hooks/use-toast.ts"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Authentication",
+      "status": "passed",
+      "attempts": 4,
+      "started_at": "2026-08-09T11:43:20+05:30",
+      "completed_at": "2026-08-09T11:54:05+05:30",
+      "implementation_evidence": [
+        "Added @supabase/ssr browser/server clients and middleware cookie refresh with environment validation.",
+        "Rewired the existing Luma email and OTP screens to Supabase signInWithOtp/verifyOtp while preserving their markup and Tailwind styling.",
+        "Implemented token-hash callback verification, visible safe auth errors, user metadata completion, session restoration, and Supabase logout.",
+        "Protected /home, /create, /settings, and /finish-signup; migrated profile image upload to server-session identity and removed legacy client-trusted JWT/OTP/user endpoints.",
+        "Added .env.example names-only Supabase configuration, 16 auth contract tests, runtime redirect evidence, and desktop/mobile UI regression captures."
+      ],
+      "validation_evidence": [
+        "Final npm run lint: PASS with seven documented non-blocking pre-existing warnings.",
+        "Final npm test: PASS; 3 files and 16 tests covering login request/errors, OTP verification, session restoration, metadata, logout, route protection, and unauthenticated action rejection.",
+        "Final npm run build: PASS; 14 routes/pages generated and Supabase middleware compiled.",
+        "Final npm run typecheck: PASS after production route types were regenerated.",
+        "Runtime unauthenticated page gate: /home, /create, /settings, and /finish-signup redirect 307 to /signin with next; public auth pages return 200.",
+        "Runtime invalid callback gate: PASS after repair; redirects 307 to sign-in with a safe error instead of crashing.",
+        "UI regression: desktop sign-in is visually equivalent to Phase 0; desktop/mobile captures stored in .codex/campus-auth/ui-regression.",
+        "Secret boundary scan: only NEXT_PUBLIC Supabase URL/anon names appear in client-reachable code; service-role value is absent and unused."
+      ],
+      "failures": [
+        "Resolved: standalone typecheck initially read stale .next types for deleted legacy auth routes.",
+        "Resolved: production build exposed SSR-unsafe window/localStorage reads on the newly middleware-protected create page.",
+        "Resolved: invalid auth callback initially returned HTTP 500 when Supabase configuration was absent."
+      ],
+      "files_changed": [
+        ".env.example",
+        ".gitignore",
+        ".codex/campus-auth/**",
+        "package.json",
+        "package-lock.json",
+        "vitest.config.mts",
+        "tests/auth/**",
+        "src/middleware.ts",
+        "src/lib/supabase/**",
+        "src/lib/auth/browser.ts",
+        "src/lib/auth/server.ts",
+        "src/app/auth/confirm/route.ts",
+        "src/app/api/auth/** (removed)",
+        "src/app/api/user/route.ts (removed)",
+        "src/app/api/user/upload-image/route.ts",
+        "src/app/create/page.tsx",
+        "src/app/settings/page.tsx",
+        "src/components/SignIn/SignInForm.tsx",
+        "src/components/SignIn/OtpLogin.tsx",
+        "src/components/SignIn/CreateUsernameForm.tsx",
+        "src/components/UserDropdown.tsx",
+        "src/components/CreateEvent/**"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Database Foundation",
+      "status": "passed",
+      "attempts": 1,
+      "started_at": "2026-08-09T11:56:44+05:30",
+      "completed_at": "2026-08-09T12:10:50+05:30",
+      "implementation_evidence": [
+        "Added Supabase CLI cloud-project configuration and one ordered, reproducible campus foundation migration.",
+        "Created profiles, organizations, inbound_emails, events, event_requests, notifications, organization_followers, and user_interests with complete enums, foreign/unique/check constraints, timestamps, and query indexes.",
+        "Added auth-user profile bootstrap, server-side admin helper, privileged-field/ownership/identity protection triggers, and RLS policies on every public table.",
+        "Added the locked, capacity-aware respond_to_event_request database function with organizer/self-request/state checks and participant notification.",
+        "Added 16 non-Docker migration security/contract tests and cloud-only validation/application documentation."
+      ],
+      "validation_evidence": [
+        "npm test: PASS; 4 files, 32 tests total, including 16 database foundation contract checks.",
+        "npm run lint: PASS with documented non-blocking pre-existing warnings.",
+        "npm run typecheck: PASS.",
+        "npm run build: PASS; production application and middleware generated successfully.",
+        "git diff --check and database/client secret scans: PASS.",
+        "Cloud-only constraint honored: no local Supabase/Docker validation, CI, or unidentified remote database mutation performed; migration is ready for linked cloud dry-run/push."
+      ],
+      "failures": [],
+      "files_changed": [
+        "package.json",
+        "package-lock.json",
+        "supabase/config.toml",
+        "supabase/.gitignore",
+        "supabase/seed.sql",
+        "supabase/migrations/20260809063000_campus_foundation.sql",
+        "tests/database/foundation-migration.test.ts",
+        ".codex/campus-database/validation.md"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Unified Event Core",
+      "status": "passed",
+      "attempts": 2,
+      "started_at": "2026-08-09T12:12:06+05:30",
+      "completed_at": "2026-08-09T12:17:16+05:30",
+      "implementation_evidence": [
+        "Added canonical event constants and strict Zod schemas covering every required type, source, category, status, content type, timestamp, location, registration, source, confidence, and publication field.",
+        "Added one Supabase event repository for published listing/detail and ownership-scoped student create/update/delete operations.",
+        "Forced solo/student/organizer identity and null institutional fields on student creation; update/delete queries additionally filter owner, type, and source.",
+        "Added unified event and CRUD tests for official email, solo student, unknown category, career placement opportunity, validation, ownership, and RLS error propagation."
+      ],
+      "validation_evidence": [
+        "Attempt 1 FAIL: minimal student creation failed because nullable start/end fields lacked input defaults; phase did not advance.",
+        "Attempt 2 npm test: PASS; 5 files and 39 tests.",
+        "Attempt 2 npm run typecheck: PASS.",
+        "Attempt 2 npm run build: PASS; production application and middleware generated.",
+        "npm run lint: PASS with documented non-blocking pre-existing warnings; git diff --check: PASS.",
+        "No UI files were changed for Phase 4, so the Phase 0/2 UI baseline remains intact."
+      ],
+      "failures": [
+        "Resolved after attempt 1: nullable student start_time and end_time were required at the input type/parser boundary."
+      ],
+      "files_changed": [
+        "src/lib/events/constants.ts",
+        "src/lib/events/schema.ts",
+        "src/lib/events/repository.ts",
+        "tests/events/event-core.test.ts"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Existing Luma Integration",
+      "status": "passed",
+      "attempts": 3,
+      "started_at": "2026-08-09T12:18:00+05:30",
+      "completed_at": "2026-08-09T12:27:35+05:30",
+      "implementation_evidence": [
+        "Connected the authenticated home, discovery, calendar, and event-detail routes to the shared Supabase published-event repository through a resilient server loader.",
+        "Added native Luma-styled event cards, filter chips, calendar agenda rows, detail metadata, cloud cover URL rendering, and configuration/query empty states without adding a component library or design system.",
+        "Official and solo/student records share the same cards, routes, filtering, schedule grouping, and detail page; discovery extends the required category/type filter vocabulary.",
+        "Forced event-backed feeds to dynamic server rendering so cloud publications appear without a new application build, and protected all new authenticated routes in existing Supabase middleware."
+      ],
+      "validation_evidence": [
+        "Final npm test: PASS; 7 files and 48 tests, including TSX-rendered official/student cards, filters, schedule/location fallback, grouping, repository validation, and protected routes.",
+        "Final npm run typecheck and npm run lint: PASS; lint has only seven documented baseline warnings.",
+        "Final npm run build: PASS; home, discovery, calendars, and event detail are dynamic routes.",
+        "Runtime smoke: public routes return 200 and all new authenticated routes redirect safely to sign-in when cloud configuration/session is absent.",
+        "Phase 0/current desktop homepage, mobile homepage, and sign-in screenshots were visually equivalent apart from live clock/video/ambient pixels; captures and detailed evidence are in .codex/campus-ui-regression/phase-05/validation.md.",
+        "git diff --check and service-role/credential scan: PASS; no Docker, local Supabase runtime, CI/CD, or cloud mutation was performed."
+      ],
+      "failures": [
+        "Resolved after attempt 1: Vitest OXC inherited JSX preserve and could not import the TSX event card for the render regression test.",
+        "Resolved after attempt 2: a no-configuration production build would prerender home/calendar empty instead of refreshing from later cloud publications."
+      ],
+      "files_changed": [
+        "src/app/home/page.tsx",
+        "src/app/discover/page.tsx",
+        "src/app/calendars/page.tsx",
+        "src/app/events/[id]/page.tsx",
+        "src/components/Events/**",
+        "src/lib/events/load.ts",
+        "src/lib/events/presentation.ts",
+        "src/lib/events/repository.ts",
+        "src/lib/supabase/middleware.ts",
+        "tests/auth/protected-routes.test.ts",
+        "tests/events/event-card.test.ts",
+        "tests/events/event-presentation.test.ts",
+        "vitest.config.mts",
+        ".codex/campus-ui-regression/phase-05/**"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Seed Official Events",
+      "status": "passed",
+      "attempts": 1,
+      "started_at": "2026-08-09T12:28:00+05:30",
+      "completed_at": "2026-08-09T12:32:32+05:30",
+      "implementation_evidence": [
+        "Added an idempotent Supabase seed with fixed IDs for four verified official organizations and five published official campus events.",
+        "Seeded realistic future schedules, registration deadlines, descriptions, categories, capacities, locations, and Asia/Kolkata timezone data with no local/downloaded cover images.",
+        "Kept runtime authorization unchanged: seeds add no endpoint, function, policy, grant, auth user, service-role path, or client privilege."
+      ],
+      "validation_evidence": [
+        "npm test: PASS; 8 files and 59 tests, including reproducibility, exact event count/titles, verified organizations, future ordered times, categories, UI loader visibility, and authorization-boundary checks.",
+        "npm run typecheck, npm run lint, and npm run build: PASS; only seven documented baseline lint warnings remain.",
+        "git diff --check and credential scan: PASS.",
+        "Cloud link check reported not-linked, so no unidentified remote dry-run/mutation occurred; Docker/local Supabase and CI/CD were not used.",
+        "Detailed evidence and supported cloud application command are recorded in .codex/campus-seed/validation.md."
+      ],
+      "failures": [],
+      "files_changed": [
+        "supabase/seed.sql",
+        "tests/database/official-seed.test.ts",
+        ".codex/campus-seed/validation.md"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Student-Created Activities",
+      "status": "passed",
+      "attempts": 1,
+      "started_at": "2026-08-09T12:33:00+05:30",
+      "completed_at": "2026-08-09T12:37:45+05:30",
+      "implementation_evidence": [
+        "Extended the existing /create image-picker and Personal Calendar form with complete responsive student-activity fields, capacity, approval settings, and safe error/redirect behavior.",
+        "Added authenticated POST /api/events creation that strips spoofed ownership/classification fields, forces published discovery state, and delegates to the ownership-enforcing shared repository.",
+        "Tightened event URL inputs to HTTP(S) so student-controlled cover/meeting/registration values cannot introduce executable URL schemes."
+      ],
+      "validation_evidence": [
+        "npm test: PASS; 10 files and 64 tests covering unauthenticated rejection, authenticated owner binding, spoof stripping, invalid input, safe database failure, URL protocols, form lifecycle fields, repository enforcement, and discovery.",
+        "npm run typecheck, npm run lint, npm run build, and git diff --check: PASS; only seven documented baseline warnings remain.",
+        "Production build includes dynamic /api/events and the existing /create route; created published records feed the shared dynamic home/discovery/calendar/detail views.",
+        "No unidentified remote event was created because the cloud project is not linked; no Docker/local Supabase, local image assets, or CI/CD were used.",
+        "Detailed evidence is recorded in .codex/campus-student-events/validation.md."
+      ],
+      "failures": [],
+      "files_changed": [
+        "src/app/api/events/route.ts",
+        "src/app/create/page.tsx",
+        "src/components/CreateEvent/EventForm/EventForm.tsx",
+        "src/lib/events/schema.ts",
+        "tests/events/event-core.test.ts",
+        "tests/events/student-create-route.test.ts",
+        "tests/events/student-create-form.test.ts",
+        ".codex/campus-student-events/validation.md"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Join Request and Approval Flow",
+      "status": "passed",
+      "attempts": 1,
+      "started_at": "2026-08-09T12:38:00+05:30",
+      "completed_at": "2026-08-09T12:43:06+05:30",
+      "implementation_evidence": [
+        "Added identity-bound request create/read/cancel APIs and organizer accept/reject API backed by a shared validated event-request repository.",
+        "Added event-detail request controls for students and pending decision/capacity controls for organizers using the existing Luma detail metadata styling.",
+        "Added a forward migration restricting requests to published solo events and replacing the decision function with request/event row locks, active-state/type/owner checks, and serialized capacity enforcement."
+      ],
+      "validation_evidence": [
+        "npm test: PASS; 12 files and 73 tests covering uniqueness, solo/published/self request RLS, locks, capacity, ownership, authenticated binding, duplicate conflict, RPC delegation, and safe failure mapping.",
+        "npm run typecheck, npm run lint, npm run build, git diff --check, and credential scan: PASS; only seven baseline warnings remain.",
+        "Production build includes dynamic request/decision endpoints and the enhanced event-detail route.",
+        "No remote mutation or Docker/local Supabase was used because the cloud project remains unlinked; full evidence is in .codex/campus-join-flow/validation.md."
+      ],
+      "failures": [],
+      "files_changed": [
+        "supabase/migrations/20260809070000_harden_solo_event_requests.sql",
+        "src/lib/events/requests.ts",
+        "src/app/api/events/[id]/requests/route.ts",
+        "src/app/api/event-requests/[id]/route.ts",
+        "src/components/Events/JoinRequestPanel.tsx",
+        "src/app/events/[id]/page.tsx",
+        "tests/database/join-flow-migration.test.ts",
+        "tests/events/join-flow-route.test.ts",
+        ".codex/campus-join-flow/validation.md"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Notifications",
+      "status": "passed",
+      "attempts": 1,
+      "started_at": "2026-08-09T12:43:15+05:30",
+      "completed_at": "2026-08-09T12:46:11+05:30",
+      "implementation_evidence": [
+        "Added database-driven organizer new-request, participant accept/reject, accepted-participant event update/cancel, and admin/service reminder notifications.",
+        "Converted the existing header bell into a Luma-styled authenticated notification popover with event links and read-state updates.",
+        "Added an owner-scoped notification API while retaining RLS and immutable notification-field trigger enforcement."
+      ],
+      "validation_evidence": [
+        "npm test: PASS; 13 files and 79 tests covering every required type, recipients, accepted-participant targeting, reminder authorization, ownership, and read-state protection.",
+        "npm run typecheck, npm run lint, npm run build, and git diff --check: PASS; seven baseline warnings remain.",
+        "No cloud mutation or Docker/local Supabase was used; details are in .codex/campus-notifications/validation.md."
+      ],
+      "failures": [],
+      "files_changed": [
+        "supabase/migrations/20260809073000_notification_lifecycle.sql",
+        "src/app/api/notifications/route.ts",
+        "src/components/Notifications/NotificationMenu.tsx",
+        "src/components/Header.tsx",
+        "tests/database/notification-lifecycle.test.ts",
+        ".codex/campus-notifications/validation.md"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Resend Outbound Email",
+      "status": "passed",
+      "attempts": 2,
+      "started_at": "2026-08-09T12:46:20+05:30",
+      "completed_at": "2026-08-09T13:43:23+05:30",
+      "implementation_evidence": [
+        "Added server-only Supabase admin and isolated Resend delivery services with skipped/failed/sent results instead of thrown provider failures.",
+        "Added outbound_email_logs migration for recipient, event, type, provider ID, status, and error recording under admin/service access.",
+        "Wired organizer new-request and participant accepted/rejected transactional email attempts after their core database transactions.",
+        "Wired accepted-participant event update emails after owner-scoped updates and reminder emails after route and database admin authorization."
+      ],
+      "validation_evidence": [
+        "Final npm test: PASS; 15 files and 86 tests covering provider configuration, bearer request, skip/failure isolation, all transactional trigger paths, accepted-attendee targeting, delivery logs, and secret boundaries.",
+        "npm run typecheck, npm run lint, npm run build, and git diff --check: PASS; only seven baseline warnings remain.",
+        "Read-only linked migration history confirms all four local migrations, including outbound_email_logs, are applied remotely.",
+        "Detailed evidence is recorded in .codex/campus-email-outbound/validation.md; no live test email was sent."
+      ],
+      "failures": [
+        "Attempt 1 FAIL: Vitest could not resolve/execute the undeclared server-only guard through the new email import path; server-only was declared and aliased to a no-op only in the test environment, then 82 tests passed."
+      ],
+      "files_changed": [
+        ".env.example",
+        "package.json",
+        "package-lock.json",
+        "supabase/migrations/20260809080000_outbound_email_logs.sql",
+        "src/lib/supabase/admin.ts",
+        "src/lib/email/resend.ts",
+        "src/lib/email/notifications.ts",
+        "src/app/api/events/[id]/requests/route.ts",
+        "src/app/api/event-requests/[id]/route.ts",
+        "src/app/api/events/[id]/route.ts",
+        "src/app/api/events/[id]/reminder/route.ts",
+        "tests/email/outbound-contract.test.ts",
+        "tests/email/resend.test.ts",
+        "tests/events/join-flow-route.test.ts",
+        "tests/server-only.ts",
+        "vitest.config.mts",
+        ".codex/campus-email-outbound/validation.md"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Resend Inbound Email",
+      "status": "in_progress",
+      "attempts": 1,
+      "started_at": "2026-08-09T13:43:30+05:30",
+      "completed_at": null,
+      "implementation_evidence": [
+        "Added a public email.received webhook that verifies fresh Svix/Resend signatures over the untouched request body before parsing.",
+        "Added full received-email content retrieval, raw text/HTML/attachment persistence, message-id idempotency, exact verified official organization matching, unknown-sender review, and failed-content error persistence.",
+        "Scrubbed accidentally populated .env.example back to names-only and added the RESEND_WEBHOOK_SECRET contract."
+      ],
+      "validation_evidence": [
+        "npm test: PASS; 17 files and 92 tests covering authentic/tampered/replayed signatures, display-name distrust, raw persistence, verified matching, unknown review, failure status, and idempotency.",
+        "npm run typecheck, npm run lint, npm run build, and git diff --check: PASS; webhook route builds dynamically and only baseline warnings remain.",
+        "Names-only environment template check: PASS. Live webhook validation remains unavailable until RESEND_WEBHOOK_SECRET is configured."
+      ],
+      "failures": [
+        "Attempt 1 FAIL: RESEND_WEBHOOK_SECRET is missing, so the live webhook intentionally returns 503 and Phase 11 cannot pass yet.",
+        "Security remediation required: real keys had been placed in .env.example; the file was scrubbed. Rotate the exposed Resend API key and Supabase service-role key."
+      ],
+      "files_changed": [
+        ".env.example",
+        "src/lib/email/webhook.ts",
+        "src/lib/email/inbound.ts",
+        "src/app/api/webhooks/resend/route.ts",
+        "tests/email/inbound-webhook.test.ts",
+        "tests/email/inbound-contract.test.ts"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "AI Event Extraction",
+      "status": "pending",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "implementation_evidence": [],
+      "validation_evidence": [],
+      "failures": [],
+      "files_changed": []
+    },
+    {
+      "id": 13,
+      "name": "Admin Review",
+      "status": "pending",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "implementation_evidence": [],
+      "validation_evidence": [],
+      "failures": [],
+      "files_changed": []
+    },
+    {
+      "id": 14,
+      "name": "Duplicate and Update Detection",
+      "status": "pending",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "implementation_evidence": [],
+      "validation_evidence": [],
+      "failures": [],
+      "files_changed": []
+    },
+    {
+      "id": 15,
+      "name": "Security and End-to-End Validation",
+      "status": "pending",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "implementation_evidence": [],
+      "validation_evidence": [],
+      "failures": [],
+      "files_changed": []
+    },
+    {
+      "id": 16,
+      "name": "Vercel Deployment Readiness",
+      "status": "pending",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "implementation_evidence": [],
+      "validation_evidence": [],
+      "failures": [],
+      "files_changed": []
+    }
+  ],
+  "blockers": [],
+  "decisions": [
+    "Treat the invocation-time working tree, including the user's eleven pre-existing tracked modifications, as the protected UI baseline.",
+    "Record Phase 0's pre-existing build, typecheck, and lint failures without modifying product code, as explicitly allowed by the Phase 0 acceptance criteria.",
+    "Use the existing image.png as a preserved repository reference and headless Chrome captures as objective current-render evidence."
+    ,
+    "Keep Next.js App Router/Vercel route handlers as the backend boundary and use reproducible Supabase migrations/RLS rather than adding a standalone server.",
+    "Reserve the Supabase service-role client for verified server-only webhook/admin work; normal reads and writes remain session-scoped under RLS.",
+    "Disable email auto-publishing for MVP regardless of confidence; all extracted records begin in pending_review."
+    ,
+    "Use Supabase SSR cookie sessions and server getUser verification; remove the legacy local-storage JWT/OTP endpoints rather than leaving a parallel authentication path.",
+    "Support both Supabase six-digit email OTP and token-hash email-link callbacks through the unchanged authentication UI."
+    ,
+    "Use the Supabase cloud free tier only: do not start local Docker services or add CI; validate migrations non-destructively until the intended cloud project is explicitly linked."
+  ],
+  "validation_history": [
+    {
+      "phase": 0,
+      "attempt": 1,
+      "timestamp": "2026-08-09T10:58:06+05:30",
+      "result": "PASS",
+      "evidence": "Required baseline topology, repository/build status, routes, components, architecture, UI invariants, responsive/auth screenshots, change-scope check, and secret scan verified."
+    },
+    {
+      "phase": 1,
+      "attempt": 1,
+      "timestamp": "2026-08-09T11:04:00+05:30",
+      "result": "FAIL",
+      "evidence": "Build/lint failed on route-module exports and existing lint defects; standalone typecheck was invalidated by concurrent .next regeneration. Phase did not advance."
+    },
+    {
+      "phase": 1,
+      "attempt": 2,
+      "timestamp": "2026-08-09T11:41:45+05:30",
+      "result": "PASS",
+      "evidence": "Audit coverage/dependencies/assumptions passed; lint, build, sequential typecheck, secret scan, route smoke, UI screenshot comparison, JSON validity, and diff integrity passed."
+    },
+    {
+      "phase": 2,
+      "attempt": 1,
+      "timestamp": "2026-08-09T11:47:40+05:30",
+      "result": "FAIL",
+      "evidence": "Typecheck referenced stale generated types for removed legacy auth routes; phase did not advance."
+    },
+    {
+      "phase": 2,
+      "attempt": 2,
+      "timestamp": "2026-08-09T11:48:20+05:30",
+      "result": "FAIL",
+      "evidence": "Production prerender failed because existing create components read window/localStorage during SSR; phase did not advance."
+    },
+    {
+      "phase": 2,
+      "attempt": 3,
+      "timestamp": "2026-08-09T11:50:55+05:30",
+      "result": "FAIL",
+      "evidence": "Runtime invalid callback returned 500 under missing configuration; callback was repaired and phase did not advance."
+    },
+    {
+      "phase": 2,
+      "attempt": 4,
+      "timestamp": "2026-08-09T11:54:05+05:30",
+      "result": "PASS",
+      "evidence": "Email OTP/link contract, logout, restoration, protected routes/actions, safe errors, secret boundaries, lint, 16 tests, build, typecheck, runtime redirects, and UI regression all passed."
+    },
+    {
+      "phase": 3,
+      "attempt": 1,
+      "timestamp": "2026-08-09T12:10:50+05:30",
+      "result": "PASS",
+      "evidence": "All required tables, constraints, indexes, timestamps, RLS policies, admin/ownership triggers, capacity-safe request function, 16 database contract tests, full test suite, lint, typecheck, build, and secret scan passed under the user-mandated cloud-only/no-CI constraint."
+    },
+    {
+      "phase": 4,
+      "attempt": 1,
+      "timestamp": "2026-08-09T12:13:49+05:30",
+      "result": "FAIL",
+      "evidence": "Student event input incorrectly required nullable start/end timestamps; CRUD tests and typecheck failed, and the phase did not advance."
+    },
+    {
+      "phase": 4,
+      "attempt": 2,
+      "timestamp": "2026-08-09T12:17:16+05:30",
+      "result": "PASS",
+      "evidence": "Unified official/solo schema, unknown/career support, ownership-scoped CRUD, RLS error propagation, 39 tests, typecheck, lint, build, and diff integrity passed."
+    },
+    {
+      "phase": 5,
+      "attempt": 1,
+      "timestamp": "2026-08-09T12:24:00+05:30",
+      "result": "FAIL",
+      "evidence": "The TSX event-card render regression test could not be transformed by Vitest OXC under jsx preserve; the phase did not advance."
+    },
+    {
+      "phase": 5,
+      "attempt": 2,
+      "timestamp": "2026-08-09T12:26:20+05:30",
+      "result": "FAIL",
+      "evidence": "The production route report showed event feeds could be statically frozen empty when cloud keys were absent at build time; dynamic rendering was added and the phase did not advance."
+    },
+    {
+      "phase": 5,
+      "attempt": 3,
+      "timestamp": "2026-08-09T12:27:35+05:30",
+      "result": "PASS",
+      "evidence": "Published-event home/discovery/calendar/detail integration, official/student parity, filters, protected routes, 48 tests, lint, typecheck, dynamic production build, route smoke, UI screenshot comparison, diff integrity, and secret boundaries passed."
+    },
+    {
+      "phase": 6,
+      "attempt": 1,
+      "timestamp": "2026-08-09T12:32:32+05:30",
+      "result": "PASS",
+      "evidence": "Five idempotent official events and four verified organizations, realistic future data, published UI loader path, 59 tests, typecheck, lint, build, diff/secret checks, and cloud-only/no-mutation constraint passed."
+    },
+    {
+      "phase": 7,
+      "attempt": 1,
+      "timestamp": "2026-08-09T12:37:45+05:30",
+      "result": "PASS",
+      "evidence": "Reused creation UI, authenticated solo/student ownership binding, capacity/approval lifecycle, published discovery, spoof rejection, URL safety, 64 tests, typecheck, lint, build, and diff integrity passed."
+    },
+    {
+      "phase": 8,
+      "attempt": 1,
+      "timestamp": "2026-08-09T12:43:06+05:30",
+      "result": "PASS",
+      "evidence": "End-to-end request/cancel/accept/reject UI and APIs, duplicate constraint, solo-only RLS, server identity, organizer authorization, locked database capacity, 73 tests, typecheck, lint, build, diff and secret checks passed."
+    },
+    {
+      "phase": 9,
+      "attempt": 1,
+      "timestamp": "2026-08-09T12:46:11+05:30",
+      "result": "PASS",
+      "evidence": "All six notification types, correct organizer/participant recipients, lifecycle/reminder behavior, owner-protected read state, header popover, 79 tests, typecheck, lint, build, and diff integrity passed."
+    },
+    {
+      "phase": 10,
+      "attempt": 1,
+      "timestamp": "2026-08-09T12:47:35+05:30",
+      "result": "FAIL",
+      "evidence": "The new server-only email import path was not resolvable/executable in Vitest; the phase did not advance. The dependency/test alias was repaired and the partial suite now has 82 passing tests."
+    },
+    {
+      "phase": 10,
+      "attempt": 2,
+      "timestamp": "2026-08-09T13:43:23+05:30",
+      "result": "PASS",
+      "evidence": "All required transactional recipients/triggers, non-throwing Resend isolation, persistent delivery failures, admin reminder authorization, accepted-attendee targeting, 86 tests, typecheck, lint, build, diff/secret checks, and linked migration parity passed."
+    },
+    {
+      "phase": 11,
+      "attempt": 1,
+      "timestamp": "2026-08-09T13:48:28+05:30",
+      "result": "FAIL",
+      "evidence": "Inbound signature/content/persistence implementation and 92-test/build gates passed, but RESEND_WEBHOOK_SECRET is not configured, so live webhook authenticity cannot be validated and the phase did not advance."
+    }
+  ],
+  "last_summary": "Phase 10 passed. Phase 11 is in progress after attempt 1: signed inbound persistence is implemented with 92 passing tests, but RESEND_WEBHOOK_SECRET must be configured and exposed credentials rotated before revalidation; phase did not advance."
+}
