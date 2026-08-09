@@ -17,7 +17,7 @@ Campus LeviClub preserves the existing LeviClub clone interface and adds one cam
 
 </div>
 
-## Demo for judges: email an event, watch it publish
+## Demo for judges: email an event, watch it publish 🤠️⭕️
 
 1. **Sign in** to the deployed platform (Google or email magic link).
 2. **Send an event email** to the platform inbox at `events@moreusul.resend.app`.
